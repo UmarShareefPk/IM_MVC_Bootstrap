@@ -1,0 +1,77 @@
+.site-bg{
+    background-color: #003018;
+}
+
+.site-cl{
+    color: #003018;
+}
+
+.site-bg-img {
+ background-image: url(/images/green.jpg);
+ background-size: 100% 100%;
+}
+
+.navbar .nav-link{
+    color: white;
+}
+.navbar-brand{
+    color: white;
+    font-size: 25px !important;
+}
+
+
+
+  
+ /* extra Small devices (landscape phones, 576px and up) */
+@media (min-width: 279px) {  
+    .main-container {
+        width: 100vw;
+        min-height: 100vh;
+        background-color: white;
+    }  
+ }
+
+  /*  Small devices (landscape phones, 576px and up) */
+@media (min-width: 400px) {    
+    .main-container {
+        width: 100vw;
+        min-height: 100vh;
+    }   
+}
+
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+    .main-container {
+        width: 100vw;
+        min-height: 100vh;
+    }  
+ }
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+    .main-container {
+        width: 100vw;
+        min-height: 100vh;
+    }  
+ }
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+    .main-container {
+        width: 100vw;
+        min-height: 100vh;
+        background-color: white;
+        margin-top: 5vh;;
+    }  
+    .navbar{
+        padding: 10px 200px !important;
+        width: auto;
+    }
+   
+}
+
+
+td{
+    word-break:break-all;
+  }
