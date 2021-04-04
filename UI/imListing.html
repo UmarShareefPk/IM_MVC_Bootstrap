@@ -9,7 +9,9 @@
     <script src="./scripts/jquery-3.6.0.min.js" ></script>
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script src="https://kit.fontawesome.com/9c6b3ade7b.js" crossorigin="anonymous"></script>
 </head>
 <body class="">
 
@@ -22,31 +24,39 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item ">
-          <a class="nav-link" href="#">Incidents</a>
+          <a class="nav-link" href="#"><i class="fas1 fa-exclamation1 "></i>Incidents</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Users</a>
+          <a class="nav-link" href="#"><i class="fa1s fa-1user"></i>Users</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Contact</a>
-        </li>        
+        </li>  
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+         
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="#"><span class="notification-count">5 new</span></a>
+        </li>         
       </ul>
     </div>
   </nav>
 
-<!-- -->
+<!-- Title-->
     <div class="container main-container">    
      
       <div class="row">
       <div class="col col-sm-12">
         <h3 class="site-cl">Incident Listing</h3>
       </div>
-     </div>
+     </div>    
     
-    <div class="row1">
-      <div class="col1 col-1sm-12">
+     <!-- Listing-->
+    <div class="row">
+      <div class="col col-sm-12">
         <div class="table-responsive">
-          <table class="table table-striped">
+          <table class="table ">
             <thead>
               <tr>
                 <th>Title </th>
@@ -60,8 +70,8 @@
             </thead>
             <tbody>
               <tr>
-                <td>First incident</td>
-                <td class="description"
+                <td><a href="imDetail.html">First incident </a></td>
+                <td class="description text-muted"
                   title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
                   Lorem ipsum dolor...</td>
                 <td>Umar Shareef</td>
@@ -92,9 +102,70 @@
                 <td>12/15/2020</td>
                 <td>In Progress</td>
               </tr>
+              <tr>
+                <td>Third incident</td>
+                <td class="description"
+                  title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
+                  Lorem ipsum dolor...</td>
+                <td>Shahbaz Shareef</td>
+                <td>Imran Khan</td>
+                <td>10/9/2020</td>
+                <td>12/15/2020</td>
+                <td>In Progress</td>
+              </tr>
+              <tr>
+                <td>Third incident</td>
+                <td class="description"
+                  title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
+                  Lorem ipsum dolor...</td>
+                <td>Shahbaz Shareef</td>
+                <td>Imran Khan</td>
+                <td>10/9/2020</td>
+                <td>12/15/2020</td>
+                <td>In Progress</td>
+              </tr>
+              <tr>
+                <td>Third incident</td>
+                <td class="description"
+                  title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
+                  Lorem ipsum dolor...</td>
+                <td>Shahbaz Shareef</td>
+                <td>Imran Khan</td>
+                <td>10/9/2020</td>
+                <td>12/15/2020</td>
+                <td>In Progress</td>
+              </tr>
+              <tr>
+                <td>Third incident</td>
+                <td class="description"
+                  title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
+                  Lorem ipsum dolor...</td>
+                <td>Shahbaz Shareef</td>
+                <td>Imran Khan</td>
+                <td>10/9/2020</td>
+                <td>12/15/2020</td>
+                <td>In Progress</td>
+              </tr>
+     
+             
             </tbody>
           </table>
         </div>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-end">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">6</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>          
+        </nav>
+
+
       </div>
     </div>
     

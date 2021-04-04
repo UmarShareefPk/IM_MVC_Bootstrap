@@ -1,0 +1,244 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/imDetail.css">
+    <script src="./scripts/jquery-3.6.0.min.js" ></script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script src="https://kit.fontawesome.com/9c6b3ade7b.js" crossorigin="anonymous"></script>
+</head>
+<body class="">
+
+  <!--  Navbar-->
+  <nav class="navbar navbar-toggleable-md navbar-dark bg-custom  site-bg">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">Incident Manager</a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item ">
+          <a class="nav-link" href="#"><i class="fas1 fa-exclamation1 "></i>Incidents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa1s fa-1user"></i>Users</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>       
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fas fa-bell"></i><span class="notification-count">5 new</span></a>
+        </li>         
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-container">
+    <!-- Page Title-->   
+    <div class="row">
+      <div class="col col-sm-12">
+        <h3 class="site-cl">Incident Details</h3>
+      </div>
+    </div>
+    <br> <br>
+    <!-- Title-->
+    <div class="row section"> 
+      <div class="col-md-8 col-sm-12">
+        <h4 class="text-primary"> Title will go here  <i class="fas fa-edit text-primary"></i></h4>
+      </div>  
+      <div class="col-md-4 col-sm-12">
+        <p class="text-muted timstamp">Created by Umar 5 hours ago </p>
+      </div>  
+    </div>   
+   
+     <!-- Fields and updates-->
+    <div class="row section"> 
+      <div class=" col-md-8 col-sm-12" >
+        <h6 class="text-primary">Description : <i class="fas fa-edit text-primary"></i></h6>
+        <div class="field">
+          <p class="text-muted">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa quibusdam maiores totam, saepe ipsa necessitatibus
+            magni! Molestias beatae, asperiores, tempore maiores odio sunt sit quasi veritatis architecto incidunt at ipsum.
+          </p>
+        </div>
+        <div class="">
+          <textarea id="description" class="">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa quibusdam maiores totam, saepe ipsa necessitatibus magni! Molestias beatae, asperiores, tempore maiores odio sunt sit quasi veritatis architecto incidunt at ipsum.
+           </textarea>
+           <div class="w-100 text-right fields-update-icon">
+            <i class="fas fa-times-circle text-warning" title="Cancel"></i>
+            <i class="fas fa-check text-success" title="Save"></i>
+           </div>
+        
+        </div>
+        
+        <h6 class="text-primary">Additional Details : <i class="fas fa-edit text-primary"></i></h6>
+        <div class="field">
+          <p class="text-muted">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa quibusdam maiores totam, saepe ipsa necessitatibus
+            magni! Molestias beatae, asperiores, tempore maiores odio sunt sit quasi veritatis architecto incidunt at ipsum.
+          </p>
+        </div>
+        <div class="">
+          <textarea class="">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa quibusdam maiores totam, saepe ipsa necessitatibus magni! Molestias beatae, asperiores, tempore maiores odio sunt sit quasi veritatis architecto incidunt at ipsum.
+            </textarea>
+            <div class="w-100 text-right fields-update-icon">
+              <i class="fas fa-times-circle text-warning" title="Cancel"></i>
+              <i class="fas fa-check text-success" title="Save"></i>
+             </div>
+        </div>
+        
+        <h6 class="text-primary"> Attachments:</h6>
+        <p class="">
+        <ul class="field attchements">
+          <li class="text-primary w-33"><i class="fas fa-times-circle  text-danger"></i>File 1</li>
+          <li class="text-primary w-33">File 2</li>
+          <li class="text-primary w-33">File 3</li>
+          <li class="text-primary w-33">File 4</li>
+          <li class="text-primary w-33">File 5</li>
+          <li class="text-primary w-33">File 6</li>
+          <li class="text-primary w-33">File 7</li>
+          <li class="text-primary w-33">File 8</li>
+          <li class="text-primary w-33">File 9</li>
+          <li class="text-primary w-33">File 10</li>
+          <li class="text-primary w-33">File 11</li>
+          <li class="text-primary w-33">File 12</li>
+          <li class="text-primary w-33">File 13</li>
+          <li class="text-primary w-33">File 14</li>
+          <li class="text-primary w-33">File 15</li>
+          <li class="text-primary w-33">File 16</li>
+          <li class="text-primary w-33">File 17</li>
+          <li class="text-primary w-33">File 18</li>
+          <li class="text-primary w-33">File 19</li>
+          <li class="text-primary w-33">File 20</li>
+          <li class="text-primary w-33">File 21</li>
+          <li class="text-primary w-33">File 22</li>
+          <li class="text-primary w-33">File 23</li>
+          <li class="text-primary w-33">File 24</li>
+          <li class="text-primary w-33">File 25</li>
+          <li class="text-primary w-33">File 26</li>
+          <li class="text-primary w-33">File 27</li>
+        </ul>
+        </p>
+      </div>  
+      
+      <div class=" col-md-4 col-sm-12">
+        <table class="table">
+          <tr>
+            <td ><h6 class="text-primary">Status</h6></td>
+            <td>
+              <select class="browser-default  dropdown-custom">
+                <option selected>In Progress</option>
+                <option value="1">New</option>
+                <option value="2">Closed</option>
+                <option value="3">Approved</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+          <td><h6 class="text-primary">Assignee</h6></td>
+            <td>
+              <!-- Example single danger button -->
+                <div class="btn-group">
+                  <input type="text" value="Umar Shareef" class="dropdown-toggle dropdown-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                
+                  <div class="dropdown-menu justify-content-center">
+                    <div class="dropdown-item">
+                    <input type="text" placeholder="Search" class="input-text"  />
+                    </div>
+                    
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a>
+                  </div>
+                </div>
+            </td>
+          </tr>
+
+        </table>
+    
+      </div>  
+    </div>
+
+    
+     <!-- Comments-->
+    <div class="row section">
+      <div class=" col-md-8 col-sm-12">
+    
+        <h4>Comments</h4>
+    <br>
+        <div class="commentBox">
+    
+          <div class="commentHeader d-flex">
+            <div class="w-75"><a class="text-primary">Umar Shareef</a> added a comment. - 7 days ago </div>
+            <div class="w-25 d-flex justify-content-end">
+              <i class="fas fa-edit text-primary"></i>
+              <i class="fas fa-times-circle text-danger" title="Cancel"></i>
+            </div>
+          </div>
+          <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores tempora quibusdam
+            cum iure alias fugiat. Qui ipsum labore fuga recusandae quo est aliquid sunt repellendus soluta odio,
+            consequatur inventore animi!
+          </p>
+          <div class="hide">
+            <textarea class="">
+                                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa quibusdam maiores totam, saepe ipsa necessitatibus magni! Molestias beatae, asperiores, tempore maiores odio sunt sit quasi veritatis architecto incidunt at ipsum.
+                                </textarea>
+            <div class="w-100 text-right fields-update-icon">
+              <i class="fas fa-times-circle text-warning" title="Cancel"></i>
+              <i class="fas fa-check text-success" title="Save"></i>
+            </div>
+          </div>
+          <p>
+          <ul class="commentFiles">
+            <li> <a class="center Indigo-text darken-4"><i class="fas fa-times-circle text-danger" title="Cancel"></i>File 1</a> </li>
+            <li> <a class="center Indigo-text darken-4">File 2</a> </li>
+            <li> <a class="center Indigo-text darken-4">File 3</a> </li>
+          </ul>
+          </p>
+          <hr>
+        </div>
+    
+    
+    
+        <h5>Add Comment</h5>
+        <div class="input-field">
+          <textarea id="comment" placeholder="Type a comment here" class=""></textarea>          
+        </div>
+        <div class="file-field ">
+         
+        </div>
+    
+        <div class="comment-buttons text-center ">    
+          <button class="btn  text-white bg-success">
+            <span>Add</span>
+            <i class="fas fa-check "></i>
+            </a>
+          </button>
+    
+          <button class="btn bg-warning text-white">
+            <span>Cancel</span>
+            <i class="fas fa-times-circle  text-white"></i>
+            </a>
+          </button>
+        </div>
+      </div>
+    
+    </div>
+    
+
+  </div><!-- end of container-->
+    
+   
+
+</body>
+</html>

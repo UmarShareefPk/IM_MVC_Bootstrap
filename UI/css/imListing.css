@@ -24,6 +24,27 @@
   
 }
 
-table th{
+table th {
     white-space: nowrap;
+    color:  #003018;
+}
+table td {
+    color: darkslategrey;
+}
+
+table td a {
+    color: darkblue;
+}
+
+.pagination a{
+    color:  darkblue;
+}
+.pagination a:hover{
+  text-decoration: underline;
+  background-color:  #003018;
+  color: white;
+}
+.table td, .table th {
+
+    line-height: 2;
 }
