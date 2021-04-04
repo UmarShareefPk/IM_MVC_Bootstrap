@@ -35,11 +35,15 @@ table td {
 .table td, .table th {
 
     line-height: 2;
+    vertical-align: middle !important;
 }
 
 textarea{
     width: 100%;
-    min-height: 15vh;
+    resize: none;
+    overflow: hidden;
+    min-height: 40px;
+    max-height: 100px;
 }
 
 .section{
@@ -91,6 +95,8 @@ select.dropdown-custom option{
 ul.field li {
     list-style: none;
     display: inline;
+    padding-left: 25px;
+    cursor: pointer;
 }
 
 /*Comments */
