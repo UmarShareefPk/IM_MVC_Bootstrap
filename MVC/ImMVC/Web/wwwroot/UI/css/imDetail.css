@@ -1,0 +1,120 @@
+
+ /* extra Small devices (landscape phones, 576px and up) */
+@media (min-width: 279px) { 
+  
+ }
+
+  /*  Small devices (landscape phones, 576px and up) */
+@media (min-width: 400px) { 
+   
+ }
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+   
+ }
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+   
+ }
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+  
+}
+
+table th {
+    white-space: nowrap;
+    color:  #003018;
+}
+table td {
+    color: darkslategrey;
+}
+
+.update-section.table td, .update-section.table th {
+
+    line-height: 2;
+    vertical-align: middle !important;
+}
+
+textarea{
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    min-height: 40px;
+    max-height: 100px;
+}
+
+.section{
+    padding-bottom: 2vh;
+}
+
+.timstamp{
+    font-size: smaller;
+}
+
+.fields-update-icon{
+    font-size: x-large;
+    cursor: pointer;
+}
+.fields-update-icon .fa-times-circle{
+    color: orange;
+}
+.fields-update-icon .fa-check{
+    color: green;
+}
+
+.field{
+    max-height: 25vh;
+    overflow-y: auto;
+}
+
+.dropdown-custom{
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    width: 200px;
+}
+select.dropdown-custom{
+   padding:5px;
+}
+
+select.dropdown-custom option{
+    background: darkgreen;
+    color: white;
+ }
+
+.input-text, textarea {
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+}
+.input-text:focus , textarea:focus{
+   outline: none;
+}
+
+ul.field li {
+    list-style: none;
+    display: inline;
+    padding-right: 25px;
+    cursor: pointer;
+}
+
+/*Comments */
+
+ul.commentFiles{
+    text-align: center;
+   }
+ul.commentFiles li {
+    list-style: none;
+    display: inline;
+    padding-left: 25px;
+    cursor: pointer;
+}
+
+.commentHeader{
+padding-bottom: 20px;
+}
+
+.comment-buttons{
+    margin-top: 1vh;
+}
