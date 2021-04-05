@@ -115,3 +115,7 @@
 									   to(#19911D),
 									   color-stop(.6,#54DE5D))
 }
+
+.navbar-toggler{
+    margin-top: 8px;
+}

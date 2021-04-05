@@ -32,7 +32,7 @@ table td {
     color: darkslategrey;
 }
 
-.table td, .table th {
+.update-section.table td, .update-section.table th {
 
     line-height: 2;
     vertical-align: middle !important;
@@ -66,7 +66,7 @@ textarea{
 }
 
 .field{
-    max-height: 15vh;
+    max-height: 25vh;
     overflow-y: auto;
 }
 
@@ -95,7 +95,7 @@ select.dropdown-custom option{
 ul.field li {
     list-style: none;
     display: inline;
-    padding-left: 25px;
+    padding-right: 25px;
     cursor: pointer;
 }
 

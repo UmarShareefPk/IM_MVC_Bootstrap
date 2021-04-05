@@ -73,3 +73,16 @@ table td {
     max-height: 100px;
 }
 
+.custom-fileupload-container{
+    position: relative;
+}
+.custom-fileupload-container .file{
+    position: absolute;
+    top: 5px;
+    left: 0;
+    opacity: 0;
+}
+
+.custom-fileupload-container .fa-paperclip{
+    font-size: x-large;
+}

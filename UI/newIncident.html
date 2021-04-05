@@ -60,7 +60,7 @@
             <td><h6 class="text-muted">Assignee</h6></td>
             <td>
               <div class="btn-group w-100">
-                <input type="text" value="Umar Shareef" class="w-100 dropdown-toggle txt" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                <input type="text" value="Umar Shareef" class="w-100 dropdown-toggle txt text-muted" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
               
                 <div class="dropdown-menu justify-content-center">
                   <div class="dropdown-item">
@@ -94,16 +94,17 @@
           </tr>
           <tr>
             <td colspan="2">
-              <div>
-                <input type="button" class="bg-primary text-white" value="Add Files" />
-                <input type="file" />
+              <div class="custom-fileupload-container">
+                <button class="btn bg-primary text-white" ><i class="fas fa-paperclip"></i></button>
+                <input class="file" id="files" onchange="$('#filestxt').val($('#files')[0].files.length+ ' file selected.')" type="file" multiple />
+                <input type="text" id="filestxt" class="txt w-50 text-muted" value="Upload Files" readonly >
               </div>
              
             </td>
           </tr>
           <tr>
             <td colspan="2" class="text-center">
-                <input type="button" class="btn bg-success text-white" value="Add" />
+                <input type="button" class="btn bg-success text-white" value="Save" />
                 <input type="button" class="btn bg-warning text-white" value="Cancel" />
             </td>
           </tr>
