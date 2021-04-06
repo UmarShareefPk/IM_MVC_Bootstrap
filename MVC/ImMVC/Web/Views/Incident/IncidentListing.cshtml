@@ -10,13 +10,14 @@
         <a href="./newIncident.html" class="btn text-white bg-success">Add New</a>
     </div>
 </div>
+
 <div class="row search-bar">
     <div class="col-sm-12">
       <span class="text-muted "> Search : </span>  
       <input type="text" class="txt w-50 text-muted" placeholder="Type title or description" />
-    </div>
-    
+    </div>    
 </div>
+
 <!-- Listing-->
 <div class="row">
     <div class="col col-sm-12">
@@ -45,81 +46,7 @@
                         <td>12/9/2020</td>
                         <td>12/31/2020</td>
                         <td>Open</td>
-                    </tr>
-                    <tr>
-                        <td>2nd incident</td>
-                        <td class="description"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
-                        <td>Nawaz Shareef</td>
-                        <td>Khan Rasheed</td>
-                        <td>11/9/2020</td>
-                        <td>12/31/2020</td>
-                        <td>New</td>
-                    </tr>
-                    <tr>
-                        <td>Third incident</td>
-                        <td class="description"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
-                        <td>Shahbaz Shareef</td>
-                        <td>Imran Khan</td>
-                        <td>10/9/2020</td>
-                        <td>12/15/2020</td>
-                        <td>In Progress</td>
-                    </tr>
-                    <tr>
-                        <td>Third incident</td>
-                        <td class="description"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
-                        <td>Shahbaz Shareef</td>
-                        <td>Imran Khan</td>
-                        <td>10/9/2020</td>
-                        <td>12/15/2020</td>
-                        <td>In Progress</td>
-                    </tr>
-                    <tr>
-                        <td>Third incident</td>
-                        <td class="description"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
-                        <td>Shahbaz Shareef</td>
-                        <td>Imran Khan</td>
-                        <td>10/9/2020</td>
-                        <td>12/15/2020</td>
-                        <td>In Progress</td>
-                    </tr>
-                    <tr>
-                        <td>Third incident</td>
-                        <td class="description"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
-                        <td>Shahbaz Shareef</td>
-                        <td>Imran Khan</td>
-                        <td>10/9/2020</td>
-                        <td>12/15/2020</td>
-                        <td>In Progress</td>
-                    </tr>
-                    <tr>
-                        <td>Third incident</td>
-                        <td class="description"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
-                        <td>Shahbaz Shareef</td>
-                        <td>Imran Khan</td>
-                        <td>10/9/2020</td>
-                        <td>12/15/2020</td>
-                        <td>In Progress</td>
-                    </tr>
-
-
+                    </tr>  
                 </tbody>
             </table>
         </div>
@@ -128,15 +55,20 @@
             <ul class="pagination justify-content-end">
                 <li class="page-item"><a class="page-link" href="#">Previous</a></li>
                 <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item"><a class="page-link" href="#">6</a></li>
                 <li class="page-item"><a class="page-link" href="#">Next</a></li>
             </ul>
         </nav>
-
-
     </div>
 </div>
+
+<script>
+    $(document).ready(() => {
+        console.log('@ViewBag.userLogin');
+        localStorage.setItem("userlogin", JSON.stringify(@ViewBag.userLogin));
+     });
+
+    function loadIncidents() {
+
+    }
+
+</script>

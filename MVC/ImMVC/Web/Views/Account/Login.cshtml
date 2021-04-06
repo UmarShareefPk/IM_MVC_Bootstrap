@@ -1,7 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     Layout = null;
 }
 
@@ -11,11 +8,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./UI/css/global.css">
-    <link rel="stylesheet" href="./UI/css/login.css">
+    <link rel="stylesheet" href="~/css/global.css">
+    <link rel="stylesheet" href="~/css/login.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <script src="~/js/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
 </head>
 <body class="site-bg-img">
     <div class="container login-container">
@@ -24,17 +23,17 @@
         <h6 class="text-center site-cl">Please login</h6>
         <br>
 
-        <form method="post" action="Account/Login">
+        <form method="post" action='@Url.Content("~/Account/Login")'>
             <div class="form-group">
                 <label for="exampleInputEmail1" class="site-cl">Email address</label>
-                <input type="text" class="form-control" id="usernameTxt" name="username"  placeholder="Username">
+                <input type="text" class="form-control" id="usernameTxt" name="username"  placeholder="Username" value="@(ViewBag.Username ?? ViewBag.Username)">
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1" class="site-cl">Password</label>
                 <input type="password" class="form-control" name="password" placeholder="Password">
             </div>
             <div class="form-group">
-                <label class="text-danger"> Incorrect username or password.</label>
+                <label class="text-danger"> @(ViewBag.Error ?? ViewBag.Error)</label>
             </div>
             <button type="submit" class="btn site-bg text-white">Login</button>
         </form>

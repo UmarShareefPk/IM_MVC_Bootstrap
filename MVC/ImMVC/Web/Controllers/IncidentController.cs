@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Models;
+using Web.Helpers;
+using Newtonsoft.Json;
 
 namespace Web.Controllers
 {
@@ -10,6 +13,8 @@ namespace Web.Controllers
     {
         public IActionResult IncidentListing()
         {
+            var user = HttpContext.Session.Get<UserLogin>("UserLogin");
+            ViewBag.userLogin = JsonConvert.SerializeObject(user);
             return View();
         }
     }
