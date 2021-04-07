@@ -15,6 +15,7 @@ namespace Web.Controllers
         {
             var user = HttpContext.Session.Get<UserLogin>("UserLogin");
             ViewBag.userLogin = JsonConvert.SerializeObject(user);
+            ViewBag.token = user.Token;
             return View();
         }
     }

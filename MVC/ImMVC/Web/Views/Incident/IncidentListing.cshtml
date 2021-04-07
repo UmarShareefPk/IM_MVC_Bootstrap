@@ -13,9 +13,9 @@
 
 <div class="row search-bar">
     <div class="col-sm-12">
-      <span class="text-muted "> Search : </span>  
-      <input type="text" class="txt w-50 text-muted" placeholder="Type title or description" />
-    </div>    
+        <span class="text-muted "> Search : </span>
+        <input type="text" class="txt w-50 text-muted" placeholder="Type title or description" />
+    </div>
 </div>
 
 <!-- Listing-->
@@ -34,19 +34,17 @@
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="imListRows">
                     <tr>
                         <td><a href="./imDetail.html">First incident </a></td>
-                        <td class="description text-muted"
-                            title="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.">
-                            Lorem ipsum dolor...
-                        </td>
+                        <td class='description text-muted' title='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.'>  Lorem ipsum dolor... </td>
                         <td>Umar Shareef</td>
                         <td>Yasir Rasheed</td>
                         <td>12/9/2020</td>
                         <td>12/31/2020</td>
                         <td>Open</td>
-                    </tr>  
+                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -60,15 +58,46 @@
         </nav>
     </div>
 </div>
-
-<script>
-    $(document).ready(() => {
-        console.log('@ViewBag.userLogin');
-        localStorage.setItem("userlogin", JSON.stringify(@ViewBag.userLogin));
+@section Scripts{
+    <script>
+    $(document).ready(function () {
+        localStorage.setItem("userlogin", JSON.stringify(@Html.Raw(ViewBag.userLogin)));
+        loadIncidents();
      });
 
     function loadIncidents() {
-
+        axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+        const url = "https://localhost:44310/" + "api/Incidents/GetIncidentsWithPage?PageSize=8&PageNumber=1&SortBy=q&SortDirection=q&Search=";
+           // "PageSize=" + parameters.PageSize + "&PageNumber=" + parameters.PageNumber
+           // + "&SortBy=q&SortDirection=q&Search=" + parameters.Search;
+        axios({
+            method: 'GET',
+            url: url
+           // ,cancelToken: new axios.CancelToken(c => cancel = c)
+        })
+            .then((response) => {
+                const data = response.data.Incidents;
+                let incidents = "";
+                data.forEach((incident) => {
+                    incidents += "<tr>";
+                    incidents += "<td><a href='#'>" + incident.Title + " </a></td>"; 
+                    incidents += "   <td title='" + incident.Description + "'>  " + incident.Description.slice(0,15) +"... </td>";
+                    incidents += "<td>" + incident.AssignedTo + "</td>";
+                    incidents += "<td>" + incident.CreatedBy + "</td>";
+                    incidents += "<td><span title=" + moment(incident.CreatedAT).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.CreatedAT).fromNow() + "</span></td>";
+                    incidents += "<td><span title=" + moment(incident.DueDate).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.DueDate).fromNow() + "</span></td>";                    
+                    incidents += "<td>" + incident.Status + "</td>";
+                    incidents += "</tr>";
+                })
+                $("#imListRows").html(incidents);
+                console.log(incidents);
+            })
+            .catch((err) => {
+                console.log(err.message);
+                const data = err.message;
+                console.log(err.message);
+            });    
     }
 
-</script>
+    </script>
+}
