@@ -35,29 +35,19 @@
                     </tr>
                 </thead>
                 <tbody id="imListRows">
-                    <tr>
-                        <td><a href="./imDetail.html">First incident </a></td>
-                        <td class='description text-muted' title='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque perferendis ipsum repudiandae nulla sequi culpa! Sint nulla fugit quidem tenetur magni corrupti expedita magnam vitae, at totam voluptatum iusto aliquam.'>  Lorem ipsum dolor... </td>
-                        <td>Umar Shareef</td>
-                        <td>Yasir Rasheed</td>
-                        <td>12/9/2020</td>
-                        <td>12/31/2020</td>
-                        <td>Open</td>
-                    </tr>
-
                 </tbody>
             </table>
         </div>
 
         <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <ul class="pagination justify-content-end" id="pageContainer">                
             </ul>
         </nav>
     </div>
 </div>
+
+
+
 @section Scripts{
     <script>
     $(document).ready(function () {
@@ -65,39 +55,62 @@
         loadIncidents();
      });
 
-    function loadIncidents() {
+    function loadIncidents(pageSize = 7, pageNumber = 1, search = "", ) {
         axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
-        const url = "https://localhost:44310/" + "api/Incidents/GetIncidentsWithPage?PageSize=8&PageNumber=1&SortBy=q&SortDirection=q&Search=";
-           // "PageSize=" + parameters.PageSize + "&PageNumber=" + parameters.PageNumber
-           // + "&SortBy=q&SortDirection=q&Search=" + parameters.Search;
-        axios({
-            method: 'GET',
-            url: url
-           // ,cancelToken: new axios.CancelToken(c => cancel = c)
-        })
-            .then((response) => {
-                const data = response.data.Incidents;
-                let incidents = "";
-                data.forEach((incident) => {
-                    incidents += "<tr>";
-                    incidents += "<td><a href='#'>" + incident.Title + " </a></td>"; 
-                    incidents += "   <td title='" + incident.Description + "'>  " + incident.Description.slice(0,15) +"... </td>";
-                    incidents += "<td>" + incident.AssignedTo + "</td>";
-                    incidents += "<td>" + incident.CreatedBy + "</td>";
-                    incidents += "<td><span title=" + moment(incident.CreatedAT).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.CreatedAT).fromNow() + "</span></td>";
-                    incidents += "<td><span title=" + moment(incident.DueDate).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.DueDate).fromNow() + "</span></td>";                    
-                    incidents += "<td>" + incident.Status + "</td>";
-                    incidents += "</tr>";
-                })
-                $("#imListRows").html(incidents);
-                console.log(incidents);
+        const url = "https://localhost:44310/" +
+            "api/Incidents/GetIncidentsWithPage?PageSize=" + pageSize +
+            "&PageNumber=" + pageNumber + "&SortBy=q&SortDirection=q&Search=" + search + "";         
+            axios({
+                method: 'GET',
+                url: url
+               // ,cancelToken: new axios.CancelToken(c => cancel = c)
+            })
+            .then((response) => {                             
+                setIncidents(response.data.Incidents);
+                setPages(parseInt(response.data.Total_Incidents), pageSize, pageNumber, search);
             })
             .catch((err) => {
-                console.log(err.message);
-                const data = err.message;
-                console.log(err.message);
+                console.log(err.message);   
             });    
-    }
+    } // end of loadIncidents
 
+        function setIncidents(allIncidents) {
+            let incidents = "";
+            allIncidents.forEach((incident) => {
+                incidents += "<tr>";
+                incidents += "<td><a href='#'>" + incident.Title + " </a></td>";
+                incidents += "   <td title='" + incident.Description + "'>  " + incident.Description.slice(0, 15) + "... </td>";
+                incidents += "<td>" + incident.AssignedTo + "</td>";
+                incidents += "<td>" + incident.CreatedBy + "</td>";
+                incidents += "<td><span title=" + moment(incident.CreatedAT).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.CreatedAT).fromNow() + "</span></td>";
+                incidents += "<td><span title=" + moment(incident.DueDate).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.DueDate).fromNow() + "</span></td>";
+                incidents += "<td>" + incident.Status + "</td>";
+                incidents += "</tr>";
+            })
+            $("#imListRows").html(incidents);
+        }
+        function setPages(totalRecords, pageSize, currentPage, search) {
+            let pagesHtml = "";
+            let noOfPages = Math.ceil(totalRecords / pageSize);
+            if (totalRecords == 0)
+                return;
+            if (currentPage === 1)
+                pagesHtml += "<li class='page-item'><span class='page-link'>Previous</span></li>";
+            else               
+                pagesHtml += "<li class='page-item' onclick=\"loadIncidents(" + pageSize + "," + (currentPage - 1) + ",'" + search + "');\"><a class='page-link' href='#'>Previous</a></li>";
+                            
+            for (let i = 1; i <= noOfPages; i++) {
+                let isActive = i === currentPage ? "active" : "";
+                pagesHtml += "<li class='page-item " + isActive + "' onclick=\"loadIncidents(" + pageSize + "," + i + ",'" + search + "');\"><a class='page-link' href='#'>" + i + "</a></li>";
+            }
+
+            if (currentPage === noOfPages)
+                pagesHtml += "<li class='page-item'><span class='page-link'>Next</span></li>";
+            else
+                pagesHtml += "<li class='page-item' onclick=\"loadIncidents(" + pageSize + "," + (currentPage + 1) + ",'" + search + "');\"><a class='page-link' href='#'>Next</a></li>";
+                
+
+            $("#pageContainer").html(pagesHtml);
+        }
     </script>
 }
