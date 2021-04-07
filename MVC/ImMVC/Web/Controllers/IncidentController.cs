@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace Web.Controllers
 {
+    [SessionCheck]
     public class IncidentController : Controller
     {
         public IActionResult IncidentListing()

@@ -20,7 +20,7 @@
 
 <!-- Listing-->
 <div class="row">
-    <div class="col col-sm-12">
+    <div class="col-sm-12">
         <div class="table-responsive">
             <table class="table ">
                 <thead>
@@ -38,13 +38,34 @@
                 </tbody>
             </table>
         </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4 ">
+                <div class="text-success records-info" id="info">Showin from 1 to 7 of 49 Incidents</div>
+            </div>
+            <div class="col-sm-12 col-md-2 ">
+                <div  style="margin-top:5px;">
+                    <span>Page Size :</span>
+                    <select onchange="return pageSizeChanged(this);" class="browser-default  dropdown-custom">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end" id="pageContainer">
+                    </ul>
+                </nav>
+            </div>
 
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end" id="pageContainer">                
-            </ul>
-        </nav>
+        </div>
     </div>
-</div>
 
 
 
@@ -55,7 +76,7 @@
         loadIncidents();
      });
 
-    function loadIncidents(pageSize = 7, pageNumber = 1, search = "", ) {
+    function loadIncidents(pageSize = 5, pageNumber = 1, search = "", ) {
         axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
         const url = "https://localhost:44310/" +
             "api/Incidents/GetIncidentsWithPage?PageSize=" + pageSize +
@@ -68,6 +89,7 @@
             .then((response) => {                             
                 setIncidents(response.data.Incidents);
                 setPages(parseInt(response.data.Total_Incidents), pageSize, pageNumber, search);
+                setRecordsInfo(response.data.Total_Incidents, pageSize, pageNumber);
             })
             .catch((err) => {
                 console.log(err.message);   
@@ -78,39 +100,59 @@
             let incidents = "";
             allIncidents.forEach((incident) => {
                 incidents += "<tr>";
-                incidents += "<td><a href='#'>" + incident.Title + " </a></td>";
-                incidents += "   <td title='" + incident.Description + "'>  " + incident.Description.slice(0, 15) + "... </td>";
-                incidents += "<td>" + incident.AssignedTo + "</td>";
-                incidents += "<td>" + incident.CreatedBy + "</td>";
+                incidents += "<td class='text-nowrap' title='" + incident.Title + "'><a href='#'>" + (incident.Title.length > 15 ? incident.Title.slice(0, 15) + "..." : incident.Title )+ "... </a></td>";
+                incidents += "<td class='text-nowrap w-25' title='" + incident.Description + "'>  " + (incident.Description.length > 30 ? incident.Description.slice(0, 30) + "..." : incident.Description) + "... </td>";
+                incidents += "<td>" + getUserNameById(incident.AssignedTo) + "</td>";
+                incidents += "<td>" + getUserNameById(incident.CreatedBy) + "</td>";
                 incidents += "<td><span title=" + moment(incident.CreatedAT).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.CreatedAT).fromNow() + "</span></td>";
                 incidents += "<td><span title=" + moment(incident.DueDate).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.DueDate).fromNow() + "</span></td>";
-                incidents += "<td>" + incident.Status + "</td>";
+                incidents += "<td>" + getStatusByCode(incident.Status) + "</td>";
                 incidents += "</tr>";
             })
+
+            // render html
             $("#imListRows").html(incidents);
         }
+        
         function setPages(totalRecords, pageSize, currentPage, search) {
             let pagesHtml = "";
             let noOfPages = Math.ceil(totalRecords / pageSize);
+            // No pages if no records
             if (totalRecords == 0)
                 return;
+            // set previous button
             if (currentPage === 1)
                 pagesHtml += "<li class='page-item'><span class='page-link'>Previous</span></li>";
             else               
                 pagesHtml += "<li class='page-item' onclick=\"loadIncidents(" + pageSize + "," + (currentPage - 1) + ",'" + search + "');\"><a class='page-link' href='#'>Previous</a></li>";
-                            
+
+            // set number buttons
             for (let i = 1; i <= noOfPages; i++) {
                 let isActive = i === currentPage ? "active" : "";
                 pagesHtml += "<li class='page-item " + isActive + "' onclick=\"loadIncidents(" + pageSize + "," + i + ",'" + search + "');\"><a class='page-link' href='#'>" + i + "</a></li>";
             }
 
+            // set next button
             if (currentPage === noOfPages)
                 pagesHtml += "<li class='page-item'><span class='page-link'>Next</span></li>";
             else
                 pagesHtml += "<li class='page-item' onclick=\"loadIncidents(" + pageSize + "," + (currentPage + 1) + ",'" + search + "');\"><a class='page-link' href='#'>Next</a></li>";
                 
-
+            // render html
             $("#pageContainer").html(pagesHtml);
+        }
+
+        function pageSizeChanged(dropdown) {          
+            loadIncidents($(dropdown).val(), 1);
+        }
+
+        function setRecordsInfo(total, pageSize, pageNumber) {
+            let end = pageSize * pageNumber;
+            let start = end - pageSize + 1;
+            if (end > total)
+                end = total;
+            let info = "Showin from " + start + " to " + end + " of " + total + " Incidents";
+            $("#info").html(info);
         }
     </script>
 }
