@@ -13,8 +13,7 @@ namespace Web.Helpers
     public class SessionCheck : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            //var session = filterContext.HttpContext.Session;
+        {          
             var user = filterContext.HttpContext.Session.Get<UserLogin>("UserLogin");
             if (user == null)
             {

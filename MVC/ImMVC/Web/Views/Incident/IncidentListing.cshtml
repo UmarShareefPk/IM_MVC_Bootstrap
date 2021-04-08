@@ -13,8 +13,8 @@
 
 <div class="row search-bar">
     <div class="col-sm-12">
-        <span class="text-muted "> Search : </span>
-        <input type="text" class="txt w-50 text-muted" placeholder="Type title or description" />
+        <span class="text-muted" > Search : </span>
+        <input type="text" class="txt w-50 text-muted" id="searchText" placeholder="Type title or description" />
     </div>
 </div>
 
@@ -45,7 +45,7 @@
             <div class="col-sm-12 col-md-2 ">
                 <div  style="margin-top:5px;">
                     <span>Page Size :</span>
-                    <select onchange="return pageSizeChanged(this);" class="browser-default  dropdown-custom">
+                    <select onchange="return pageSizeChanged(this);" id="pageSizeDdl" class="browser-default  dropdown-custom">
                         <option value="5" selected>5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
@@ -71,36 +71,49 @@
 
 @section Scripts{
     <script>
+        let axiosCancelToken;
+
     $(document).ready(function () {
         localStorage.setItem("userlogin", JSON.stringify(@Html.Raw(ViewBag.userLogin)));
+        localStorage.setItem("allUsers", JSON.stringify(@Html.Raw(ViewBag.Users)));
+
         loadIncidents();
+
+        $("#searchText").on("input", function (e) {
+            let searchTxt = $("#searchText").val();
+            axiosCancelToken();
+
+            let pageSize = parseInt($("#pageSizeDdl").val());
+            loadIncidents(pageSize, 1, searchTxt);
+
+        });
      });
 
     function loadIncidents(pageSize = 5, pageNumber = 1, search = "", ) {
         axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
         const url = "https://localhost:44310/" +
             "api/Incidents/GetIncidentsWithPage?PageSize=" + pageSize +
-            "&PageNumber=" + pageNumber + "&SortBy=q&SortDirection=q&Search=" + search + "";         
+            "&PageNumber=" + pageNumber + "&SortBy=q&SortDirection=q&Search=" + search + "";
             axios({
                 method: 'GET',
-                url: url
-               // ,cancelToken: new axios.CancelToken(c => cancel = c)
+                url: url,
+                cancelToken: new axios.CancelToken(c => axiosCancelToken = c)
             })
-            .then((response) => {                             
+            .then((response) => {
                 setIncidents(response.data.Incidents);
                 setPages(parseInt(response.data.Total_Incidents), pageSize, pageNumber, search);
                 setRecordsInfo(response.data.Total_Incidents, pageSize, pageNumber);
             })
             .catch((err) => {
-                console.log(err.message);   
-            });    
+                console.log(err.message);
+            });
     } // end of loadIncidents
 
         function setIncidents(allIncidents) {
             let incidents = "";
             allIncidents.forEach((incident) => {
                 incidents += "<tr>";
-                incidents += "<td class='text-nowrap' title='" + incident.Title + "'><a href='#'>" + (incident.Title.length > 15 ? incident.Title.slice(0, 15) + "..." : incident.Title )+ "... </a></td>";
+                incidents += "<td class='text-nowrap' title='" + incident.Title + "'><a href='@Url.Content("~/Incident/IncidentDetails")/" + incident.Id + "'>" + (incident.Title.length > 15 ? incident.Title.slice(0, 15) + "..." : incident.Title) + "... </a></td>";
                 incidents += "<td class='text-nowrap w-25' title='" + incident.Description + "'>  " + (incident.Description.length > 30 ? incident.Description.slice(0, 30) + "..." : incident.Description) + "... </td>";
                 incidents += "<td>" + getUserNameById(incident.AssignedTo) + "</td>";
                 incidents += "<td>" + getUserNameById(incident.CreatedBy) + "</td>";
@@ -113,7 +126,7 @@
             // render html
             $("#imListRows").html(incidents);
         }
-        
+
         function setPages(totalRecords, pageSize, currentPage, search) {
             let pagesHtml = "";
             let noOfPages = Math.ceil(totalRecords / pageSize);
@@ -123,7 +136,7 @@
             // set previous button
             if (currentPage === 1)
                 pagesHtml += "<li class='page-item'><span class='page-link'>Previous</span></li>";
-            else               
+            else
                 pagesHtml += "<li class='page-item' onclick=\"loadIncidents(" + pageSize + "," + (currentPage - 1) + ",'" + search + "');\"><a class='page-link' href='#'>Previous</a></li>";
 
             // set number buttons
@@ -137,12 +150,12 @@
                 pagesHtml += "<li class='page-item'><span class='page-link'>Next</span></li>";
             else
                 pagesHtml += "<li class='page-item' onclick=\"loadIncidents(" + pageSize + "," + (currentPage + 1) + ",'" + search + "');\"><a class='page-link' href='#'>Next</a></li>";
-                
+
             // render html
             $("#pageContainer").html(pagesHtml);
         }
 
-        function pageSizeChanged(dropdown) {          
+        function pageSizeChanged(dropdown) {
             loadIncidents($(dropdown).val(), 1);
         }
 

@@ -15,6 +15,12 @@ namespace Web.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly APIHelpers apiHelpers;
+        public AccountController(APIHelpers apis)
+        {
+            apiHelpers = apis;
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -36,8 +42,11 @@ namespace Web.Controllers
                 {                                  
                     var responseString = await response.Content.ReadAsStringAsync(); 
                     var userLogin = JsonConvert.DeserializeObject<UserLogin>(responseString);
-                    HttpContext.Session.Set<UserLogin>("UserLogin", userLogin);
-                    var u =  HttpContext.Session.Get<UserLogin>("UserLogin");
+                    HttpContext.Session.Set<UserLogin>("UserLogin", userLogin);                   
+
+                    var Users = await apiHelpers.AllUsers();
+                    HttpContext.Session.Set<List<User>>("Users", Users);
+
                     return Redirect("/Incident/IncidentListing");
                 }
                 else
@@ -50,24 +59,6 @@ namespace Web.Controllers
                     return View();
                 }
             }
-            //using (var client = new HttpClient())
-            //{
-            //    client.BaseAddress = new Uri("https://localhost:44310/");
-            //    client.DefaultRequestHeaders.Accept.Clear();
-            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2ODE5RTc5LTI1QTMtNDZDOS04QjFGLThGQjZDNkY4QUM2MSIsIm5iZiI6MTYxNzczMzIxNCwiZXhwIjoxNjE4MzM4MDE0LCJpYXQiOjE2MTc3MzMyMTR9.fjKQcx-untL_uM-jn_3-2eVxCBszz6-K8xV2p8siV6Q");
-            //    //GET Method  
-
-            //    HttpResponseMessage response = await client.GetAsync("api/Incidents/GetIncidentsWithPage?PageSize=8&PageNumber=1&SortBy=q&SortDirection=q&Search=");
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        string s = response.Content.ReadAsStringAsync().Result;
-            //    }
-            //    else
-            //    {
-            //    }
-            //}           
-         
         }
     }
 }

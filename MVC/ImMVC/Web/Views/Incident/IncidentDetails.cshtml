@@ -1,0 +1,240 @@
+﻿@model Web.Models.Incident
+@{
+}
+<link rel="stylesheet" href="~/css/imDetail.css">
+
+<div class="container main-container">
+    <!-- Page Title-->
+    <div class="row">
+        <div class="col col-sm-12">
+            <h3 class="site-cl">Incident Details</h3>
+        </div>
+    </div>
+    <br> <br>
+    <!-- Title-->
+         <div class="row section">
+             <div class="col-md-8 col-sm-12" id="title">
+                 <h4 class="text-primary"> @Model.Title  
+                    <i class="fas fa-edit text-primary" onclick="$('#title').hide(); $('#titleEdit').show();"></i>
+                 </h4>
+             </div>
+             <div class="col-md-8 col-sm-12" id="titleEdit" style="display:none;">
+                 <p>
+                     <input type="text" class="input-text w-100" value="@Model.Title" />
+                     <div class="w-100 text-right fields-update-icon">
+                         <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#title').show(); $('#titleEdit').hide(); "></i>
+                         <i class="fas fa-check text-success" title="Save"></i>
+                     </div>
+                 </p>
+             </div>
+
+             <div class="col-md-4 col-sm-12">
+                 <p class="text-muted timstamp">Created by Umar 5 hours ago </p>
+             </div>
+         </div>
+
+    <!-- Fields and updates-->
+    <div class="row section">
+        <div class=" col-md-6  col-sm-12">
+            <h6 class="text-primary">Description : 
+                <i class="fas fa-edit text-primary" onclick="$('#description').hide(); $('#descriptionEdit').show();"></i>
+            </h6>
+            <div class="field scrollbar" id="description">
+                <p class="text-muted text-center">
+                    @Model.Description
+                </p>
+            </div>
+            <div class="" id="descriptionEdit" style="display:none;">
+                <textarea id="description " class="scrollbar" oninput="auto_grow(this)">
+                       @Model.Description
+                </textarea>
+                <div class="w-100 text-right fields-update-icon">
+                    <i class="fas fa-times-circle text-warning" title="Cancel"  onclick="$('#descriptionEdit').hide(); $('#description').show();"></i>
+                    <i class="fas fa-check text-success" title="Save"></i>
+                </div>
+
+            </div>
+
+            <h6 class="text-primary">Additional Details : 
+                <i class="fas fa-edit text-primary" onclick="$('#additional').hide(); $('#additionalEdit').show();"></i>
+            </h6>
+            <div class="field scrollbar" id="additional">
+                <p class="text-muted text-center">
+                    @Model.AdditionalData
+                </p>
+            </div>
+            <div class="" id="additionalEdit" style="display:none;">
+                <textarea class="scrollbar" oninput="auto_grow(this)">
+                @Model.AdditionalData      
+                </textarea>
+                <div class="w-100 text-right fields-update-icon">
+                    <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#additional').show(); $('#additionalEdit').hide();"></i>
+                    <i class="fas fa-check text-success" title="Save"></i>
+                </div>
+            </div>
+
+            <h6 class="text-primary"> Attachments:</h6>
+            <table class="table">
+
+                @foreach (var file in Model.Attachments)
+                {
+                    <tr>
+                        <td><i class="fas fa-times-circle  text-danger"></i><a href="#"> @file.FileName </a></td>
+                    </tr>
+                }
+
+            </table>
+
+        </div>
+
+        <div class=" col-md-5 offset-md-1 col-sm-12">
+            <table class="table update-section">
+                <tr>
+                    <td><h6 class="text-primary">Status</h6></td>
+                    <td>
+                        <select class="browser-default  dropdown-custom" id="statusDdl" >
+                            <option  value="N">New</option>
+                            <option value="I">In Progress</option>
+                            <option value="C">Closed</option>
+                            <option value="A">Approved</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><h6 class="text-primary">Assignee</h6></td>
+                    <td>
+                        <!-- Example single danger button -->
+                        <div class="btn-group">
+                            <input type="text" id="assigneeDdl" value="Umar Shareef" class="dropdown-toggle dropdown-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+
+                            <div class="dropdown-menu justify-content-center">
+                                <div class="dropdown-item">
+                                    <input type="text" placeholder="Search" class="input-text" />
+                                </div>
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Separated link</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><h6 class="text-primary">Start Date</h6></td>
+                    <td>3 days ago</td>
+                </tr>
+                <tr>
+                    <td><h6 class="text-primary">Due Date</h6></td>
+                    <td>In 2 weeks</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+
+    <!-- Comments-->
+    <div class="row section">
+        <div class=" col-md-6 col-sm-12">
+
+            <h4>Comments</h4>
+            <br>
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="commentBox">
+                    <div class="commentHeader d-flex">
+                        <div class="w-75">
+                            <a class="text-primary">@comment.UserId</a>
+                            added a comment. -
+                            <span class="momentTime"> @comment.CreateDate</span>
+
+                        </div>
+                        <div class="w-25 d-flex justify-content-end">
+                            <i class="fas fa-edit text-primary" onclick="$('#commentTxt-@comment.Id').hide(); $('#commentTxtEdit-@comment.Id').show();"></i>
+                            <i class="fas fa-times-circle text-danger" title="Cancel"></i>
+                        </div>
+                    </div>
+                    <p class="text-muted text-center" id="commentTxt-@comment.Id">
+                        @comment.CommentText
+                    </p>
+
+                    <div class="" id="commentTxtEdit-@comment.Id" style="display:none;">
+                        <textarea class="scrollbar">
+                            @comment.CommentText
+                        </textarea>
+                        <div class="w-100 text-right fields-update-icon">
+                            <i class="fas fa-times-circle text-warning" onclick="$('#commentTxt-@comment.Id').show(); $('#commentTxtEdit-@comment.Id').hide();" title="Cancel"></i>
+                            <i class="fas fa-check text-success" title="Save"></i>
+                        </div>
+                    </div>
+
+                    <p>                       
+                        <table class="">
+                            @foreach (var file in comment.attachments)
+                            {
+                                <tr>
+                                    <td><i class="fas fa-times-circle  text-danger"></i><a href="#"> @file.FileName </a></td>
+                                </tr>
+                            }
+                        </table> 
+                    </p>
+                    <hr>
+                </div>
+            }
+
+
+            <h5>Add Comment</h5>
+            <div class="input-field">
+                <textarea id="comment" placeholder="Type a comment here" oninput="auto_grow(this)" class=""></textarea>
+            </div>
+            <div class="file-field ">
+
+            </div>
+
+            <div class="comment-buttons text-center ">
+                <button class="btn  text-white bg-success">
+                    <span>Add</span>
+                    <i class="fas fa-check "></i>
+                    </a>
+                </button>
+
+                <button class="btn bg-warning text-white">
+                    <span>Cancel</span>
+                    <i class="fas fa-times-circle  text-white"></i>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end of container-->
+
+@section Scripts{
+    <script>
+        
+        $(document).ready(function () {         
+
+            setAssignee();
+            $("#statusDdl").val('@Model.Status');
+
+            $(".momentTime").each(function () {
+                    var date = $(this).html().trim();
+                $(this).html(moment(date).fromNow());
+                $(this).attr("title", moment(date).format("MMMM DD YYYY, h:mm:ss a"));
+                })
+        });
+
+        function setAssignee() {
+            let allUsers = JSON.parse(localStorage.getItem("allUsers"));
+            let currentAssignee = allUsers.find((assignee) => {
+                return assignee.Id === "@Model.AssignedTo";
+            });
+
+            $("#assigneeDdl").val(currentAssignee.FirstName + " " + currentAssignee.LastName);
+        }
+    </script>
+
+
+}
