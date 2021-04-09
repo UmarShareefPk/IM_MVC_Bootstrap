@@ -40,8 +40,8 @@ namespace Web.Controllers
 
             var user = HttpContext.Session.Get<UserLogin>("UserLogin");
             ViewBag.userLogin = JsonConvert.SerializeObject(user);
-            ViewBag.token = user.Token;           
-           
+            ViewBag.token = user.Token;
+            ViewBag.userId = user.user.Id;
 
             var incident = await apiHelpers.GetIncidentById(Id);
             if (incident == null)

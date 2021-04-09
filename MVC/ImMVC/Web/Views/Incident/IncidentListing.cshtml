@@ -67,7 +67,7 @@
         </div>
     </div>
 
-
+</div>
 
 @section Scripts{
     <script>
@@ -77,7 +77,7 @@
         localStorage.setItem("userlogin", JSON.stringify(@Html.Raw(ViewBag.userLogin)));
         localStorage.setItem("allUsers", JSON.stringify(@Html.Raw(ViewBag.Users)));
 
-        loadIncidents();
+        loadIncidents(5,1,"");
 
         $("#searchText").on("input", function (e) {
             let searchTxt = $("#searchText").val();
@@ -89,8 +89,8 @@
         });
      });
 
-    function loadIncidents(pageSize = 5, pageNumber = 1, search = "", ) {
-        axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+    function loadIncidents(pageSize, pageNumber, search  ) {
+        axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
         const url = "https://localhost:44310/" +
             "api/Incidents/GetIncidentsWithPage?PageSize=" + pageSize +
             "&PageNumber=" + pageNumber + "&SortBy=q&SortDirection=q&Search=" + search + "";
@@ -156,7 +156,7 @@
         }
 
         function pageSizeChanged(dropdown) {
-            loadIncidents($(dropdown).val(), 1);
+            loadIncidents($(dropdown).val(), 1, "");
         }
 
         function setRecordsInfo(total, pageSize, pageNumber) {

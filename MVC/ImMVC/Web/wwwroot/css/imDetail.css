@@ -101,15 +101,6 @@ ul.field li {
 
 /*Comments */
 
-ul.commentFiles{
-    text-align: center;
-   }
-ul.commentFiles li {
-    list-style: none;
-    display: inline;
-    padding-left: 25px;
-    cursor: pointer;
-}
 
 .commentHeader{
 padding-bottom: 20px;
@@ -117,4 +108,20 @@ padding-bottom: 20px;
 
 .comment-buttons{
     margin-top: 1vh;
+}
+
+.dropdown-item.text-primary{
+    cursor:pointer;
+}
+
+.assignee-list{
+    max-height:50vh;
+    overflow-y:auto;
+}
+
+i.fas{
+    cursor:pointer;
+}
+.btn{
+    cursor:pointer;
 }

@@ -2,6 +2,7 @@
 @{
 }
 <link rel="stylesheet" href="~/css/imDetail.css">
+<link href="~/datepicker/simplepicker.css" rel="stylesheet" />
 
 <div class="container main-container">
     <!-- Page Title-->
@@ -20,10 +21,10 @@
              </div>
              <div class="col-md-8 col-sm-12" id="titleEdit" style="display:none;">
                  <p>
-                     <input type="text" class="input-text w-100" value="@Model.Title" />
+                     <input type="text" id="titleTxt" class="input-text w-100" value="@Model.Title" />
                      <div class="w-100 text-right fields-update-icon">
                          <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#title').show(); $('#titleEdit').hide(); "></i>
-                         <i class="fas fa-check text-success" title="Save"></i>
+                         <i class="fas fa-check text-success" title="Save" onclick="updateIncidentByField('Title', $('#titleTxt').val()); $('#title').show(); $('#titleEdit').hide();"></i>
                      </div>
                  </p>
              </div>
@@ -109,31 +110,36 @@
 
                             <div class="dropdown-menu justify-content-center">
                                 <div class="dropdown-item">
-                                    <input type="text" placeholder="Search" class="input-text" />
+                                    <input type="text" id="assigneeSearchtxt" placeholder="Search" class="input-text" />
                                 </div>
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
+                                <div id="assgineeHtml" class="assignee-list scrollbar">                                    
+                                </div>                                
                             </div>
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td><h6 class="text-primary">Start Date</h6></td>
-                    <td>3 days ago</td>
+                    <td>
+                    <h6 class="text-primary">
+                        Start Date 
+                        <i id="startDateEdit" class="fas fa-edit text-primary"></i>
+                        </h6>
+                    </td>
+                    <td id="startDate">3 days ago</td>                    
                 </tr>
                 <tr>
-                    <td><h6 class="text-primary">Due Date</h6></td>
-                    <td>In 2 weeks</td>
+                    <td>
+                        <h6 class="text-primary">
+                            Due Date
+                            <i id="dueDateEdit" class="fas fa-edit text-primary"></i>
+                        </h6>
+                    </td>
+                    <td id="dueDate">In 2 weeks</td>
                 </tr>
 
             </table>
-
         </div>
     </div>
-
 
     <!-- Comments-->
     <div class="row section">
@@ -156,7 +162,7 @@
                             <i class="fas fa-times-circle text-danger" title="Cancel"></i>
                         </div>
                     </div>
-                    <p class="text-muted text-center" id="commentTxt-@comment.Id">
+                    <p class="text-muted text-center field scrollbar" id="commentTxt-@comment.Id">
                         @comment.CommentText
                     </p>
 
@@ -202,7 +208,7 @@
 
                 <button class="btn bg-warning text-white">
                     <span>Cancel</span>
-                    <i class="fas fa-times-circle  text-white"></i>
+                         <i class="fas fa-times-circle  text-white"></i>
                     </a>
                 </button>
             </div>
@@ -212,13 +218,18 @@
 </div><!-- end of container-->
 
 @section Scripts{
+
+    <script src="~/datepicker/simplepicker.js"></script>
     <script>
 
         $(document).ready(function () {
 
             setTimestamp();
-           $("#assigneeDdl").val(getUserNameById("@Model.AssignedTo")); // set assingee value
+            $("#assigneeDdl").val(getUserNameById("@Model.AssignedTo")); // set assingee value
             $("#statusDdl").val('@Model.Status'); // set status
+            $("#startDate").html("<span title='" + moment("@Model.StartTime").format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment("@Model.StartTime").fromNow() + "</span>");
+            $("#dueDate").html("<span title='" + moment("@Model.DueDate").format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment("@Model.DueDate").fromNow() + "</span>");
+            setAssigneeList("");  //set assignee list
 
             $(".momentTime").each(function () { // changing datetime to moment format
                 var date = $(this).html().trim();
@@ -231,6 +242,11 @@
                 $(this).html(getUserNameById(userId))
             });
 
+
+            $("#assigneeSearchtxt").on("input", function (e) {
+                let searchTxt = $("#assigneeSearchtxt").val();
+                setAssigneeList(searchTxt);
+            });
         });
 
         function setTimestamp() {
@@ -240,6 +256,69 @@
             txt += "<span title='" + moment("@Model.CreatedAT").format("MMMM DD YYYY, h:mm:ss a") +"'>" + moment("@Model.CreatedAT").fromNow() + "</span>";
             $("#timestamp").html(txt);
         }
+
+        function setAssigneeList(searchTxt) {
+            let html = "";
+            let assignees = getAssingeesBySearch(searchTxt);
+            assignees.forEach((assignee) => {
+                html += " <span class='dropdown-item text-primary'";
+                html += "onclick =\"$('#assigneeDdl').val(getUserNameById('" + assignee.Id + "'))\">";
+                html +=  assignee.FirstName + " " + assignee.LastName + "</span>";
+            });
+            $("#assgineeHtml").html(html);
+        }
+
+        function updateIncidentByField(field, value){
+            let parameters = {
+                IncidentId: "@Model.Id",
+                Parameter: field,
+                Value: value,
+                UserId: "@ViewBag.userId"
+            };
+
+            axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+            const url = "https://localhost:44310/" + "api/Incidents/UpdateIncident";
+            axios.post(url, parameters)
+                .then((response) => {                  
+                   // incidentUpdatedSignalR(parameters.IncidentId);
+                })
+                .catch((err) => {
+                    console.log(err.message);                                
+                });   
+        }
+////////////////////////////////////  Date Pickers /////////////////////////////////////////
+        let datepicker = new SimplePicker({
+            zIndex: 10
+        });
+
+        let isStartDate = false; // check where datepicker focus is
+
+        $("#startDateEdit").click(function () {
+            isStartDate = true;
+            datepicker.open();
+        });
+
+
+        $("#dueDateEdit").click(function () {
+            isStartDate = false;
+            datepicker.open();
+        });
+
+        datepicker.on('submit', (date, readableDate) => {
+            if (isStartDate)
+                 $("#startDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") +"'>" + moment(date).fromNow() + "</span>");
+            else
+                $("#dueDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(date).fromNow() + "</span>");
+        });
+
+        datepicker.on('close', (date) => {
+        });
+
+
+
+
+
+
     </script>
 
 

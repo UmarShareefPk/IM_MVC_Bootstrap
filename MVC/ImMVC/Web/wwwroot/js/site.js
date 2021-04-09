@@ -40,7 +40,7 @@ function getStatusByCode(code) {
     }
 }
 
-function auto_grow(element) {
+function auto_grow(element) { // for textareas
     element.style.height = "5px";
     element.style.height = (element.scrollHeight) + "px";
 }
@@ -50,6 +50,30 @@ function getUserNameById(userId) {
     let user = allUsers.find((user) => {
         return user.Id === userId;
     });
-
     return user.FirstName + " " + user.LastName;    
+}
+
+function getAssingeesBySearch(search) {
+    let allAssignees = JSON.parse(localStorage.getItem("allUsers"));
+
+    let newList = [];
+    if (search !== "") {
+        newList = allAssignees.filter((assignee) => {
+            return (
+                assignee.FirstName.toUpperCase().startsWith( search.toUpperCase() )
+                ||
+                assignee.LastName.toUpperCase().startsWith(search.toUpperCase())
+              );
+        });
+    }
+
+    if (newList !== undefined && newList.length !== 0) {
+        //check if there is atlease one assignee
+        newList = [].concat(newList);
+    } else {
+        //if search found nothing, show all assignees
+        newList = allAssignees.slice(0, allAssignees.length);
+    }
+
+    return newList;
 }
