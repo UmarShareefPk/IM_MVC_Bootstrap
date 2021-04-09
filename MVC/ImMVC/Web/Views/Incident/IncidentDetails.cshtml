@@ -29,7 +29,7 @@
              </div>
 
              <div class="col-md-4 col-sm-12">
-                 <p class="text-muted timstamp">Created by Umar 5 hours ago </p>
+                 <p class="text-muted timstamp" id="timestamp">Created by Umar 5 hours ago </p>
              </div>
          </div>
 
@@ -146,7 +146,7 @@
                 <div class="commentBox">
                     <div class="commentHeader d-flex">
                         <div class="w-75">
-                            <a class="text-primary">@comment.UserId</a>
+                            <a class="text-primary userName">@comment.UserId</a>
                             added a comment. -
                             <span class="momentTime"> @comment.CreateDate</span>
 
@@ -213,26 +213,32 @@
 
 @section Scripts{
     <script>
-        
-        $(document).ready(function () {         
 
-            setAssignee();
-            $("#statusDdl").val('@Model.Status');
+        $(document).ready(function () {
 
-            $(".momentTime").each(function () {
-                    var date = $(this).html().trim();
+            setTimestamp();
+           $("#assigneeDdl").val(getUserNameById("@Model.AssignedTo")); // set assingee value
+            $("#statusDdl").val('@Model.Status'); // set status
+
+            $(".momentTime").each(function () { // changing datetime to moment format
+                var date = $(this).html().trim();
                 $(this).html(moment(date).fromNow());
                 $(this).attr("title", moment(date).format("MMMM DD YYYY, h:mm:ss a"));
-                })
-        });
-
-        function setAssignee() {
-            let allUsers = JSON.parse(localStorage.getItem("allUsers"));
-            let currentAssignee = allUsers.find((assignee) => {
-                return assignee.Id === "@Model.AssignedTo";
             });
 
-            $("#assigneeDdl").val(currentAssignee.FirstName + " " + currentAssignee.LastName);
+            $(".userName").each(function () { // changing userIds to (FirstName LastName)
+                var userId = $(this).html().trim();
+                $(this).html(getUserNameById(userId))
+            });
+
+        });
+
+        function setTimestamp() {
+            let txt = "Created by ";
+            txt += "<span class='text-primary'>" + getUserNameById("@Model.CreatedBy") + "</span>";
+            txt += " - ";
+            txt += "<span title='" + moment("@Model.CreatedAT").format("MMMM DD YYYY, h:mm:ss a") +"'>" + moment("@Model.CreatedAT").fromNow() + "</span>";
+            $("#timestamp").html(txt);
         }
     </script>
 
