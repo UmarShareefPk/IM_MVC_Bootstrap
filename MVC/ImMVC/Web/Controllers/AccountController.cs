@@ -10,15 +10,18 @@ using System.Threading.Tasks;
 using Web.Models;
 using Web.Helpers;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace Web.Controllers
 {
     public class AccountController : Controller
     {
         private readonly APIHelpers apiHelpers;
-        public AccountController(APIHelpers apis)
+        private readonly IConfiguration Configuration;
+        public AccountController(APIHelpers apis , IConfiguration configuration)
         {
             apiHelpers = apis;
+            Configuration = configuration;
         }
 
         [HttpGet]
@@ -32,7 +35,7 @@ namespace Web.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44310/");
+                client.BaseAddress = new Uri(Configuration["ApiBaseUrl"]);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));               
                 var json = JsonConvert.SerializeObject(new { Username = username, Password = password });

@@ -91,7 +91,7 @@
 
     function loadIncidents(pageSize, pageNumber, search  ) {
         axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
-        const url = "https://localhost:44310/" +
+        const url = "@ViewBag.baseUrl" +
             "api/Incidents/GetIncidentsWithPage?PageSize=" + pageSize +
             "&PageNumber=" + pageNumber + "&SortBy=q&SortDirection=q&Search=" + search + "";
             axios({
@@ -117,8 +117,8 @@
                 incidents += "<td class='text-nowrap w-25' title='" + incident.Description + "'>  " + (incident.Description.length > 30 ? incident.Description.slice(0, 30) + "..." : incident.Description) + "... </td>";
                 incidents += "<td>" + getUserNameById(incident.AssignedTo) + "</td>";
                 incidents += "<td>" + getUserNameById(incident.CreatedBy) + "</td>";
-                incidents += "<td><span title=" + moment(incident.CreatedAT).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.CreatedAT).fromNow() + "</span></td>";
-                incidents += "<td><span title=" + moment(incident.DueDate).format("MMMM DD YYYY, h:mm:ss a") + ">" + moment(incident.DueDate).fromNow() + "</span></td>";
+                incidents += "<td><span title='" + moment(incident.CreatedAT).format("MMMM DD YYYY, h:mm:ss a") + "' >" + moment(incident.CreatedAT).fromNow() + "</span></td>";
+                incidents += "<td><span title='" + moment(incident.DueDate).format("MMMM DD YYYY, h:mm:ss a") + "' >" + moment(incident.DueDate).fromNow() + "</span></td>";
                 incidents += "<td>" + getStatusByCode(incident.Status) + "</td>";
                 incidents += "</tr>";
             })
@@ -156,7 +156,7 @@
         }
 
         function pageSizeChanged(dropdown) {
-            loadIncidents($(dropdown).val(), 1, "");
+            loadIncidents($(dropdown).val(), 1, $("#searchText").val());
         }
 
         function setRecordsInfo(total, pageSize, pageNumber) {

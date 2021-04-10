@@ -12,136 +12,142 @@
         </div>
     </div>
     <br> <br>
-    <!-- Title-->
+    <!-------------------------------- Title ------------------------------------------>
          <div class="row section">
-             <div class="col-md-8 col-sm-12" id="title">
-                 <h4 class="text-primary"> @Model.Title  
-                    <i class="fas fa-edit text-primary" onclick="$('#title').hide(); $('#titleEdit').show();"></i>
+             <div class="col-md-8 col-sm-12" id="titleBox">
+                 <h4 class="text-primary"> <span  id="title"> @Model.Title  </span> 
+                    <i class="fas fa-edit text-primary" onclick="$('#titleBox').hide(); $('#titleEditBox').show();"></i>
                  </h4>
              </div>
-             <div class="col-md-8 col-sm-12" id="titleEdit" style="display:none;">
+             <div class="col-md-8 col-sm-12" id="titleEditBox" style="display:none;">
                  <p>
                      <input type="text" id="titleTxt" class="input-text w-100" value="@Model.Title" />
                      <div class="w-100 text-right fields-update-icon">
-                         <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#title').show(); $('#titleEdit').hide(); "></i>
-                         <i class="fas fa-check text-success" title="Save" onclick="updateIncidentByField('Title', $('#titleTxt').val()); $('#title').show(); $('#titleEdit').hide();"></i>
+                         <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#titleBox').show(); $('#titleEditBox').hide(); "></i>
+                         <i class="fas fa-check text-success" title="Save" 
+                            onclick="titleUpdate();">
+
+                         </i>
                      </div>
                  </p>
              </div>
 
              <div class="col-md-4 col-sm-12">
-                 <p class="text-muted timstamp" id="timestamp">Created by Umar 5 hours ago </p>
+                 <p class="text-muted timstamp" id="timestamp">Created by  5 hours ago </p>
              </div>
          </div>
 
     <!-- Fields and updates-->
-    <div class="row section">
-        <div class=" col-md-6  col-sm-12">
-            <h6 class="text-primary">Description : 
-                <i class="fas fa-edit text-primary" onclick="$('#description').hide(); $('#descriptionEdit').show();"></i>
-            </h6>
-            <div class="field scrollbar" id="description">
-                <p class="text-muted text-center">
-                    @Model.Description
-                </p>
-            </div>
-            <div class="" id="descriptionEdit" style="display:none;">
-                <textarea id="description " class="scrollbar" oninput="auto_grow(this)">
+         <div class="row section">
+             <div class=" col-md-6  col-sm-12">
+                 <!-------------------------------- Description ------------------------------------------>
+                 <h6 class="text-primary">
+                     Description :
+                     <i class="fas fa-edit text-primary" onclick="$('#descriptionBox').hide(); $('#descriptionEditBox').show();"></i>
+                 </h6>
+                 <div class="field scrollbar" id="descriptionBox">
+                     <p class="text-muted text-center" id="description">
+                         @Model.Description
+                     </p>
+                 </div>
+                 <div class="" id="descriptionEditBox" style="display:none;">
+                     <textarea id="descriptionTxt" class="scrollbar" oninput="auto_grow(this)">
                        @Model.Description
-                </textarea>
-                <div class="w-100 text-right fields-update-icon">
-                    <i class="fas fa-times-circle text-warning" title="Cancel"  onclick="$('#descriptionEdit').hide(); $('#description').show();"></i>
-                    <i class="fas fa-check text-success" title="Save"></i>
-                </div>
+                         </textarea>
+                     <div class="w-100 text-right fields-update-icon">
+                         <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#descriptionEditBox').hide(); $('#descriptionBox').show();"></i>
+                         <i class="fas fa-check text-success" onclick="descriptionUpdate();" title="Save"></i>
+                     </div>
 
-            </div>
-
-            <h6 class="text-primary">Additional Details : 
-                <i class="fas fa-edit text-primary" onclick="$('#additional').hide(); $('#additionalEdit').show();"></i>
-            </h6>
-            <div class="field scrollbar" id="additional">
-                <p class="text-muted text-center">
-                    @Model.AdditionalData
-                </p>
-            </div>
-            <div class="" id="additionalEdit" style="display:none;">
-                <textarea class="scrollbar" oninput="auto_grow(this)">
+                 </div>
+                 <!-------------------------------- Additonal Details ------------------------------------------>
+                 <h6 class="text-primary">
+                     Additional Details :
+                     <i class="fas fa-edit text-primary" onclick="$('#additionalDetailsBox').hide(); $('#additionalDetailsEditBox').show();"></i>
+                 </h6>
+                 <div class="field scrollbar" id="additionalDetailsBox">
+                     <p class="text-muted text-center" id="additionalDetails">
+                         @Model.AdditionalData
+                     </p>
+                 </div>
+                 <div class="" id="additionalDetailsEditBox" style="display:none;">
+                     <textarea class="scrollbar" id="additionalDetailsTxt" oninput="auto_grow(this)">
                 @Model.AdditionalData      
                 </textarea>
-                <div class="w-100 text-right fields-update-icon">
-                    <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#additional').show(); $('#additionalEdit').hide();"></i>
-                    <i class="fas fa-check text-success" title="Save"></i>
-                </div>
-            </div>
+                     <div class="w-100 text-right fields-update-icon">
+                         <i class="fas fa-times-circle text-warning" title="Cancel" onclick="$('#additionalDetailsBox').show(); $('#additionalDetailsEditBox').hide();"></i>
+                         <i class="fas fa-check text-success" title="Save" onclick="additionalDetailsUpdate();"></i>
+                     </div>
+                 </div>
+                 <!-------------------------------- Attachments ------------------------------------------>
+                 <h6 class="text-primary"> Attachments:</h6>
+                 <table class="table">
 
-            <h6 class="text-primary"> Attachments:</h6>
-            <table class="table">
+                     @foreach (var file in Model.Attachments)
+                     {
+                         <tr>
+                             <td><i class="fas fa-times-circle  text-danger"></i><a href="#"> @file.FileName </a></td>
+                         </tr>
+                     }
 
-                @foreach (var file in Model.Attachments)
-                {
-                    <tr>
-                        <td><i class="fas fa-times-circle  text-danger"></i><a href="#"> @file.FileName </a></td>
-                    </tr>
-                }
+                 </table>
 
-            </table>
+             </div>
+             <!-------------------------------- Status, Assignee, and Dates ------------------------------------------>
+             <div class=" col-md-5 offset-md-1 col-sm-12">
+                 <table class="table update-section">
+                     <tr>
+                         <td><h6 class="text-primary">Status</h6></td>
+                         <td>
+                             <select class="browser-default  dropdown-custom" id="statusDdl" onchange="updateIncidentByField('Status', $(this).val());">
+                                 <option value="N">New</option>
+                                 <option value="I">In Progress</option>
+                                 <option value="C">Closed</option>
+                                 <option value="A">Approved</option>
+                             </select>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td><h6 class="text-primary">Assignee</h6></td>
+                         <td>
+                             <!-- Example single danger button -->
+                             <div class="btn-group">
+                                 <input type="text" id="assigneeDdl" value="" class="dropdown-toggle dropdown-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
 
-        </div>
+                                 <div class="dropdown-menu justify-content-center">
+                                     <div class="dropdown-item">
+                                         <input type="text" id="assigneeSearchtxt" placeholder="Search" class="input-text" />
+                                     </div>
+                                     <div id="assgineeHtml" class="assignee-list scrollbar">
+                                     </div>
+                                 </div>
+                             </div>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>
+                             <h6 class="text-primary">
+                                 Start Date
+                                 <i id="startDateEdit" class="fas fa-edit text-primary"></i>
+                             </h6>
+                         </td>
+                         <td id="startDate">3 days ago</td>
+                     </tr>
+                     <tr>
+                         <td>
+                             <h6 class="text-primary">
+                                 Due Date
+                                 <i id="dueDateEdit" class="fas fa-edit text-primary"></i>
+                             </h6>
+                         </td>
+                         <td id="dueDate">In 2 weeks</td>
+                     </tr>
 
-        <div class=" col-md-5 offset-md-1 col-sm-12">
-            <table class="table update-section">
-                <tr>
-                    <td><h6 class="text-primary">Status</h6></td>
-                    <td>
-                        <select class="browser-default  dropdown-custom" id="statusDdl" >
-                            <option  value="N">New</option>
-                            <option value="I">In Progress</option>
-                            <option value="C">Closed</option>
-                            <option value="A">Approved</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><h6 class="text-primary">Assignee</h6></td>
-                    <td>
-                        <!-- Example single danger button -->
-                        <div class="btn-group">
-                            <input type="text" id="assigneeDdl" value="Umar Shareef" class="dropdown-toggle dropdown-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" />
+                 </table>
+             </div>
+         </div>
 
-                            <div class="dropdown-menu justify-content-center">
-                                <div class="dropdown-item">
-                                    <input type="text" id="assigneeSearchtxt" placeholder="Search" class="input-text" />
-                                </div>
-                                <div id="assgineeHtml" class="assignee-list scrollbar">                                    
-                                </div>                                
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    <h6 class="text-primary">
-                        Start Date 
-                        <i id="startDateEdit" class="fas fa-edit text-primary"></i>
-                        </h6>
-                    </td>
-                    <td id="startDate">3 days ago</td>                    
-                </tr>
-                <tr>
-                    <td>
-                        <h6 class="text-primary">
-                            Due Date
-                            <i id="dueDateEdit" class="fas fa-edit text-primary"></i>
-                        </h6>
-                    </td>
-                    <td id="dueDate">In 2 weeks</td>
-                </tr>
-
-            </table>
-        </div>
-    </div>
-
-    <!-- Comments-->
+    <!------------------------------------------------- Comments ------------------------------->
     <div class="row section">
         <div class=" col-md-6 col-sm-12">
 
@@ -262,12 +268,18 @@
             let assignees = getAssingeesBySearch(searchTxt);
             assignees.forEach((assignee) => {
                 html += " <span class='dropdown-item text-primary'";
-                html += "onclick =\"$('#assigneeDdl').val(getUserNameById('" + assignee.Id + "'))\">";
+                html += "onclick =\"assigneeSelected('"+ assignee.Id +"')\">";
                 html +=  assignee.FirstName + " " + assignee.LastName + "</span>";
             });
             $("#assgineeHtml").html(html);
         }
 
+        function assigneeSelected(id) {            
+            $('#assigneeDdl').val(getUserNameById(id));
+            updateIncidentByField("AssignedTo", id);
+        }
+
+///////////////////////////// updates ////////////////////////////////////////
         function updateIncidentByField(field, value){
             let parameters = {
                 IncidentId: "@Model.Id",
@@ -277,7 +289,7 @@
             };
 
             axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
-            const url = "https://localhost:44310/" + "api/Incidents/UpdateIncident";
+            const url = "@ViewBag.baseUrl" + "api/Incidents/UpdateIncident";
             axios.post(url, parameters)
                 .then((response) => {                  
                    // incidentUpdatedSignalR(parameters.IncidentId);
@@ -285,6 +297,25 @@
                 .catch((err) => {
                     console.log(err.message);                                
                 });   
+        }
+
+        function titleUpdate() {
+            updateIncidentByField('Title', $('#titleTxt').val().trim());
+            $('#title').html($('#titleTxt').val().trim());
+            $('#titleBox').show();
+            $('#titleEditBox').hide();
+        }
+        function descriptionUpdate() {           
+            updateIncidentByField('Description', $('#descriptionTxt').val().trim());
+            $('#description').html($('#descriptionTxt').val().trim()); 
+            $('#descriptionEditBox').hide();
+            $('#descriptionBox').show();
+        }
+        function additionalDetailsUpdate() {
+            updateIncidentByField('AdditionalData', $('#additionalDetailsTxt').val().trim().replaceAll("'" , "''"));
+            $('#additionalDetails').html($('#additionalDetailsTxt').val().trim());
+            $('#additionalDetailsEditBox').hide();
+            $('#additionalDetailsBox').show();
         }
 ////////////////////////////////////  Date Pickers /////////////////////////////////////////
         let datepicker = new SimplePicker({
@@ -298,17 +329,20 @@
             datepicker.open();
         });
 
-
         $("#dueDateEdit").click(function () {
             isStartDate = false;
             datepicker.open();
         });
 
         datepicker.on('submit', (date, readableDate) => {
-            if (isStartDate)
-                 $("#startDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") +"'>" + moment(date).fromNow() + "</span>");
-            else
+            if (isStartDate) {
+                $("#startDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(date).fromNow() + "</span>");
+                updateIncidentByField("StartTime", date);
+            }                 
+            else {
                 $("#dueDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(date).fromNow() + "</span>");
+                updateIncidentByField("DueDate", date);
+            }                
         });
 
         datepicker.on('close', (date) => {
