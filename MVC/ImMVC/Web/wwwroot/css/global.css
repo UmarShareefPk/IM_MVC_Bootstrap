@@ -114,3 +114,11 @@
 .navbar-toggler{
     margin-top: 8px;
 }
+
+i.fas {
+    cursor: pointer;
+}
+
+.btn {
+    cursor: pointer;
+}

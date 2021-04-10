@@ -86,7 +86,10 @@
                      @foreach (var file in Model.Attachments)
                      {
                          <tr>
-                             <td><i class="fas fa-times-circle  text-danger"></i><a href="#"> @file.FileName </a></td>
+                             <td>
+                                 <i class="fas fa-times-circle  text-danger"></i>
+                                 <a href="#" onclick="downloadFile(false, '', '@file.FileName', '@file.ContentType');"> @file.FileName </a>
+                             </td>
                          </tr>
                      }
 
@@ -182,15 +185,18 @@
                         </div>
                     </div>
 
-                    <p>                       
+                    <p>
                         <table class="">
                             @foreach (var file in comment.attachments)
                             {
                                 <tr>
-                                    <td><i class="fas fa-times-circle  text-danger"></i><a href="#"> @file.FileName </a></td>
+                                    <td>
+                                        <i class="fas fa-times-circle  text-danger"></i>
+                                        <a href="#" onclick="downloadFile(true, '@file.CommentId', '@file.FileName', '@file.ContentType');"> @file.FileName </a>
+                                    </td>
                                 </tr>
                             }
-                        </table> 
+                        </table>
                     </p>
                     <hr>
                 </div>
@@ -201,8 +207,10 @@
             <div class="input-field">
                 <textarea id="comment" placeholder="Type a comment here" oninput="auto_grow(this)" class=""></textarea>
             </div>
-            <div class="file-field ">
-
+            <div class="custom-file upload-container">
+                <button class="btn bg-primary text-white"><i class="fas fa-paperclip"></i></button>
+                <input class="file" id="files" onchange="$('#filestxt').val($('#files')[0].files.length+ ' file selected.')" type="file" multiple />
+                <input type="text" id="filestxt" class="txt w-75 text-muted" value="Upload Files" readonly>
             </div>
 
             <div class="comment-buttons text-center ">
@@ -214,7 +222,7 @@
 
                 <button class="btn bg-warning text-white">
                     <span>Cancel</span>
-                         <i class="fas fa-times-circle  text-white"></i>
+                    <i class="fas fa-times-circle  text-white"></i>
                     </a>
                 </button>
             </div>
@@ -274,14 +282,25 @@
             $("#assgineeHtml").html(html);
         }
 
-        function assigneeSelected(id) {            
+        function assigneeSelected(id) {
             $('#assigneeDdl').val(getUserNameById(id));
             updateIncidentByField("AssignedTo", id);
         }
 
+        function downloadFile(isComment, commentId, fileName, contentType) {
+
+            let url = "@ViewBag.baseUrl" + "api/Incidents/DownloadFile?"
+               + "type=" + (isComment ? "comment" : "incident")
+               + "&commentId=" + (isComment? commentId : "")
+               + "&incidentId=" + "@Model.Id"
+               + "&filename=" + fileName
+               + "&contentType=" + contentType           
+            window.open(url);
+        }
+
 ///////////////////////////// updates ////////////////////////////////////////
         function updateIncidentByField(field, value){
-            let parameters = {
+            let paramefileers = {
                 IncidentId: "@Model.Id",
                 Parameter: field,
                 Value: value,
@@ -291,12 +310,12 @@
             axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
             const url = "@ViewBag.baseUrl" + "api/Incidents/UpdateIncident";
             axios.post(url, parameters)
-                .then((response) => {                  
+                .then((response) => {
                    // incidentUpdatedSignalR(parameters.IncidentId);
                 })
                 .catch((err) => {
-                    console.log(err.message);                                
-                });   
+                    console.log(err.message);
+                });
         }
 
         function titleUpdate() {
@@ -305,9 +324,9 @@
             $('#titleBox').show();
             $('#titleEditBox').hide();
         }
-        function descriptionUpdate() {           
+        function descriptionUpdate() {
             updateIncidentByField('Description', $('#descriptionTxt').val().trim());
-            $('#description').html($('#descriptionTxt').val().trim()); 
+            $('#description').html($('#descriptionTxt').val().trim());
             $('#descriptionEditBox').hide();
             $('#descriptionBox').show();
         }
@@ -316,6 +335,27 @@
             $('#additionalDetails').html($('#additionalDetailsTxt').val().trim());
             $('#additionalDetailsEditBox').hide();
             $('#additionalDetailsBox').show();
+        }
+
+        function deleteAttachment(fileid) {
+            if (window.confirm("Are you sure you want to delete this attachment." + file.FileName)) {
+
+                axios.defaults.headers = { 'Authorization': `Bearer ${getState().userLogin.token + ""}` };
+                const url = incidentsUrls.deleteAttachmentUrl
+                    + "type=" + type
+                    + "&commentId=" + file.CommentId
+                    + "&incidentId=" + incidentId
+                    + "&userId=" + userid
+                    + "&fileId=" + file.Id
+                    + "&filename=" + file.FileName
+                    + "&contentType=" + file.ContentType
+                axios.get(url)
+                    .then((response) => {
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
+                    });
+            }
         }
 ////////////////////////////////////  Date Pickers /////////////////////////////////////////
         let datepicker = new SimplePicker({
@@ -338,11 +378,11 @@
             if (isStartDate) {
                 $("#startDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(date).fromNow() + "</span>");
                 updateIncidentByField("StartTime", date);
-            }                 
+            }
             else {
                 $("#dueDate").html("<span title='" + moment(date).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(date).fromNow() + "</span>");
                 updateIncidentByField("DueDate", date);
-            }                
+            }
         });
 
         datepicker.on('close', (date) => {
