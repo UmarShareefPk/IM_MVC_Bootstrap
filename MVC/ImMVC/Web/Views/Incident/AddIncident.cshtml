@@ -1,0 +1,173 @@
+﻿<link href="~/css/newIncident.css" rel="stylesheet" />
+<link href="~/datepicker/simplepicker.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="site-cl">Add New Incident</h3>
+    </div>
+</div>
+<br>
+<br>
+
+<div class="row section">
+    <div class="offset-md-2 col-md-8 col-sm-12 text-center">
+        <table class="table new-incident">
+            <tr>
+                <td><h6 class="text-muted">Title</h6></td>
+                <td><input id="title" type="text" placeholder="" class="w-100 txt" /></td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Assignee</h6></td>
+                <td>
+                    <div class="btn-group w-100">
+                        <input type="text" id="assigneeDdl" placeholder="Search and select an assignee" class="w-100 dropdown-toggle dropdown-custom txt" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" readonly />
+
+                        <div class="dropdown-menu justify-content-center">
+                            <div class="dropdown-item">
+                                <input type="text" id="assigneeSearchtxt" placeholder="Search" class="txt" />
+                            </div>
+                            <div id="assgineeHtml" class="assignee-list scrollbar">
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Description</h6></td>
+                <td><textarea class="w-100 txt text-muted" id="description" placeholder="" oninput="auto_grow(this)"></textarea></td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Additional Details</h6></td>
+                <td><textarea class="w-100 txt" id="addtionalDetails" placeholder="" oninput="auto_grow(this)"></textarea></td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Start Time</h6></td>
+                <td><input id="startDate" type="text" value="" class="w-100 txt" readonly /></td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Due Date</h6></td>
+                <td><input id="dueDate" type="text" value="" class="w-100 txt" readonly /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="custom-file upload-container w-100 text-left">
+                        <button class="btn bg-primary text-white"><i class="fas fa-paperclip"></i></button>
+                        <input class="file" id="files" onchange="$('#filestxt').val($('#files')[0].files.length+ ' file selected.')" type="file" multiple />
+                        <input type="text" id="filestxt" class="txt  text-muted" value="Click here to upload Files" readonly>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <input type="button" class="btn bg-success text-white" value="Save" />
+                    <input type="button" class="btn bg-warning text-white" value="Cancel" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/datepicker/simplepicker.js"></script>
+    <script>
+        $(document).ready(function () {
+            setAssigneeList("");
+
+            $("#assigneeSearchtxt").on("input", function (e) {
+                let searchTxt = $("#assigneeSearchtxt").val();
+                setAssigneeList(searchTxt);
+            });
+        });
+
+        function setAssigneeList(searchTxt) {
+            let html = "";
+            let assignees = getAssingeesBySearch(searchTxt);
+            assignees.forEach((assignee) => {
+                html += " <span class='dropdown-item text-primary'";
+                html += "onclick =\"assigneeSelected('" + assignee.Id + "')\">";
+                html += assignee.FirstName + " " + assignee.LastName + "</span>";
+            });
+            $("#assgineeHtml").html(html);
+        }
+
+        function assigneeSelected(id) {
+            $('#assigneeDdl').val(getUserNameById(id));
+            alert(id);
+        }
+
+    function validateForm() {
+
+        if (title === "" || description === "" || dueDateDateRef.current.value === "" || dueDateTimeRef.current.value === ""
+            || startTimeDateRef.current.value === "" || startTimeTimeRef.current.value === "")
+            return false;
+        return true;
+    }
+
+    function saveIncident() {
+        if (!validateForm()) {
+            alert("Please complete required fields before saving.")
+            return;
+        }
+
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                formData.append(
+                    "Attachment" + i + 1,
+                    files[i],
+                    files[i].name
+                );
+            }
+        }
+        formData.append("CreatedBy", '@ViewBag.userId');
+        formData.append("AssignedTo", assignee);
+        formData.append("Title", title);
+        formData.append("Description", description);
+        formData.append("AdditionalDeta", additionalDetails);
+        formData.append("StartTime", startTime);
+        formData.append("DueDate", dueDate);
+        formData.append("Status", "N");
+
+        axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
+        const url = "@ViewBag.baseUrl" + "api/Incidents/AddIncident";
+        axios.post(url, formData)
+            .then((response) => {
+                const data = true;
+            })
+            .catch((err) => {
+                const data = err.message;
+            });
+        }
+
+        ////////////////////////////////////  Date Pickers /////////////////////////////////////////
+        let datepicker = new SimplePicker({
+            zIndex: 10
+        });
+
+        let isStartDate = false; // check where datepicker focus is
+
+        $("#startDate").click(function () {
+            isStartDate = true;
+            datepicker.open();
+        });
+
+        $("#dueDate").click(function () {
+            isStartDate = false;
+            datepicker.open();
+        });
+
+        datepicker.on('submit', (date, readableDate) => {
+            if (isStartDate) {
+                $("#startDate").val(readableDate);
+
+            }
+            else {
+                $("#dueDate").val(readableDate);
+
+            }
+        });
+
+        datepicker.on('close', (date) => {
+        });
+    </script>
+}

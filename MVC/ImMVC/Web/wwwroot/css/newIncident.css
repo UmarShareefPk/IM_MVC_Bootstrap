@@ -73,16 +73,28 @@ table td {
     max-height: 100px;
 }
 
-.custom-file upload-container{
+.custom-file.upload-container{
     position: relative;
 }
-.custom-file upload-container .file{
-    position: absolute;
-    top: 5px;
-    left: 0;
-    opacity: 0;
+    .custom-file.upload-container .file {
+        position: absolute;
+        top: 0px;
+        left: 0;
+        opacity: 0;
+        height: 100%;
+        width: 100%;
+        cursor:pointer;
+    }
+
+.custom-file.upload-container .fa-paperclip{
+    font-size: x-large;
+}
+.custom-file.upload-container #filestxt{
+    width:91%;
 }
 
-.custom-file upload-container .fa-paperclip{
-    font-size: x-large;
+.assignee-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    line-height:2;
 }
