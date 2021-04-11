@@ -86,8 +86,8 @@
                      @foreach (var file in Model.Attachments)
                      {
                          <tr>
-                             <td>
-                                 <i class="fas fa-times-circle  text-danger"></i>
+                             <td id='file-@file.Id'>
+                                 <i class="fas fa-times-circle  text-danger" onclick="deleteAttachment(false, '', '@file.FileName', '@file.Id');"></i>
                                  <a href="#" onclick="downloadFile(false, '', '@file.FileName', '@file.ContentType');"> @file.FileName </a>
                              </td>
                          </tr>
@@ -158,7 +158,7 @@
             <br>
             @foreach (var comment in Model.Comments)
             {
-                <div class="commentBox">
+                <div class='commentBox' id='commentBox-@comment.Id'>
                     <div class="commentHeader d-flex">
                         <div class="w-75">
                             <a class="text-primary userName">@comment.UserId</a>
@@ -168,7 +168,7 @@
                         </div>
                         <div class="w-25 d-flex justify-content-end">
                             <i class="fas fa-edit text-primary" onclick="$('#commentTxt-@comment.Id').hide(); $('#commentTxtEdit-@comment.Id').show();"></i>
-                            <i class="fas fa-times-circle text-danger" title="Cancel"></i>
+                            <i class="fas fa-times-circle text-danger" onclick="deleteComment('@comment.Id')" title="Delete Comment"></i>
                         </div>
                     </div>
                     <p class="text-muted text-center field scrollbar" id="commentTxt-@comment.Id">
@@ -181,7 +181,7 @@
                         </textarea>
                         <div class="w-100 text-right fields-update-icon">
                             <i class="fas fa-times-circle text-warning" onclick="$('#commentTxt-@comment.Id').show(); $('#commentTxtEdit-@comment.Id').hide();" title="Cancel"></i>
-                            <i class="fas fa-check text-success" title="Save"></i>
+                            <i class="fas fa-check text-success" onclick="updateComment('@comment.Id')" title="Save"></i>
                         </div>
                     </div>
 
@@ -189,12 +189,12 @@
                         <table class="">
                             @foreach (var file in comment.attachments)
                             {
-                                <tr>
-                                    <td>
-                                        <i class="fas fa-times-circle  text-danger"></i>
-                                        <a href="#" onclick="downloadFile(true, '@file.CommentId', '@file.FileName', '@file.ContentType');"> @file.FileName </a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td id='file-@file.Id'>
+                                    <i class="fas fa-times-circle  text-danger" onclick="deleteAttachment(true, '@file.CommentId', '@file.FileName', '@file.Id');"></i>
+                                    <a href="#" onclick="downloadFile(true, '@file.CommentId', '@file.FileName', '@file.ContentType');"> @file.FileName </a>
+                                </td>
+                            </tr>
                             }
                         </table>
                     </p>
@@ -209,12 +209,12 @@
             </div>
             <div class="custom-file upload-container">
                 <button class="btn bg-primary text-white"><i class="fas fa-paperclip"></i></button>
-                <input class="file" id="files" onchange="$('#filestxt').val($('#files')[0].files.length+ ' file selected.')" type="file" multiple />
+                <input class="file" id="commentFiles" onchange="$('#filestxt').val($('#commentFiles')[0].files.length+ ' file selected.')" type="file" multiple />
                 <input type="text" id="filestxt" class="txt w-75 text-muted" value="Upload Files" readonly>
             </div>
 
             <div class="comment-buttons text-center ">
-                <button class="btn  text-white bg-success">
+                <button class="btn  text-white bg-success" onclick="addNewComment();">
                     <span>Add</span>
                     <i class="fas fa-check "></i>
                     </a>
@@ -235,7 +235,7 @@
 
     <script src="~/datepicker/simplepicker.js"></script>
     <script>
-
+///////////////////////////////////////////////////////// Setting fields ////////////////////////////////////////
         $(document).ready(function () {
 
             setTimestamp();
@@ -245,17 +245,16 @@
             $("#dueDate").html("<span title='" + moment("@Model.DueDate").format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment("@Model.DueDate").fromNow() + "</span>");
             setAssigneeList("");  //set assignee list
 
-            $(".momentTime").each(function () { // changing datetime to moment format
+            $(".momentTime").each(function () { // changing datetime to moment format. Set class momentTime to any element that as datatime raw value
                 var date = $(this).html().trim();
                 $(this).html(moment(date).fromNow());
                 $(this).attr("title", moment(date).format("MMMM DD YYYY, h:mm:ss a"));
             });
 
-            $(".userName").each(function () { // changing userIds to (FirstName LastName)
+            $(".userName").each(function () { // changing userIds to ([FirstName LastName] format)
                 var userId = $(this).html().trim();
                 $(this).html(getUserNameById(userId))
             });
-
 
             $("#assigneeSearchtxt").on("input", function (e) {
                 let searchTxt = $("#assigneeSearchtxt").val();
@@ -294,11 +293,11 @@
                + "&commentId=" + (isComment? commentId : "")
                + "&incidentId=" + "@Model.Id"
                + "&filename=" + fileName
-               + "&contentType=" + contentType           
+               + "&contentType=" + contentType
             window.open(url);
         }
 
-///////////////////////////// updates ////////////////////////////////////////
+///////////////////////////////////////////////////////// Incident updates ////////////////////////////////////////
         function updateIncidentByField(field, value){
             let paramefileers = {
                 IncidentId: "@Model.Id",
@@ -337,20 +336,22 @@
             $('#additionalDetailsBox').show();
         }
 
-        function deleteAttachment(fileid) {
-            if (window.confirm("Are you sure you want to delete this attachment." + file.FileName)) {
+        function deleteAttachment(isComment, commentId, fileName, fileId) {
+            if (window.confirm("Are you sure you want to delete this attachment." + fileName)) {
 
-                axios.defaults.headers = { 'Authorization': `Bearer ${getState().userLogin.token + ""}` };
-                const url = incidentsUrls.deleteAttachmentUrl
-                    + "type=" + type
-                    + "&commentId=" + file.CommentId
-                    + "&incidentId=" + incidentId
-                    + "&userId=" + userid
-                    + "&fileId=" + file.Id
-                    + "&filename=" + file.FileName
-                    + "&contentType=" + file.ContentType
+                  axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+                const url = "@ViewBag.baseUrl" + "api/Incidents/DeleteFile?"
+                    + "type="  + (isComment ? "comment" : "incident")
+                    + "&commentId=" + (isComment ? commentId : "")
+                    + "&incidentId=" + "@Model.Id"
+                    + "&userId=" + "@ViewBag.userId"
+                    + "&fileId=" + fileId
+                    + "&filename=" + fileName
+                   // + "&contentType=" + file.ContentType
+
                 axios.get(url)
                     .then((response) => {
+                        $("#file-" + fileId).remove();
                     })
                     .catch((err) => {
                         console.log(err.message);
@@ -387,10 +388,96 @@
 
         datepicker.on('close', (date) => {
         });
+//////////////////////////////////////////////  Comment Section ///////////////////////////////////////////////////////////////////
 
+        function addNewComment() {
+            let newComment = $("#comment").val().trim();
+            let newCommentFiles = $('#commentFiles')[0].files;
 
+            if (newComment.trim() === "") {
+                alert("Please add comment first.");
+                return;
+            }
 
+            const formData = new FormData();
 
+            if (newCommentFiles) {
+                for (let i = 0; i < newCommentFiles.length; i++) {
+                    formData.append(
+                        "Attachment" + i + 1,
+                        newCommentFiles[i],
+                        newCommentFiles[i].name
+                    );
+                }
+            }
+            formData.append("CommentText", newComment.trim());
+            formData.append("IncidentId", '@Model.Id');
+            formData.append("UserId", '@ViewBag.userId');
+
+            axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+            const url = "@ViewBag.baseUrl" + "api/Incidents/AddComment";
+                axios.post(url, formData)
+                    .then((response) => {
+                        const comment = response.data;
+                        //console.log("Comment", comment);
+                        //$('#commentFiles').val(null);
+                        //$('#commentFiles').replaceWith($('#commentFiles').clone(true));
+                        //$("#comment").val("");
+                        //$("#filestxt").val("Upload Files");
+                        window.location.reload(true);
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
+                    });
+        }
+
+        function updateComment(commentId) {
+
+            let comment = {
+                Id: commentId,
+                IncidentId: '@Model.Id',
+                UserId: '@ViewBag.userId',
+                CreateDate: new Date(),
+                CommentText: $("#commentTxtEdit-" + commentId + " textarea").val(),
+                attachments: []
+            }
+           
+            axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+            const url = "@ViewBag.baseUrl" + "api/Incidents/UpdateComment";
+            axios.post(url, comment)
+                .then((response) => {                   
+                    $("#commentTxt-" + commentId).html(comment.CommentText);
+                    $('#commentTxt-' + commentId).show();
+                    $('#commentTxtEdit-' + commentId).hide();
+                  // incidentUpdatedSignalR(comment.IncidentId);
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+
+        }
+
+        function deleteComment(commentId) {
+            if (!window.confirm("Are you sure you want to delete this comment?")) {
+                return;
+            }
+
+            axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+            const url = "@ViewBag.baseUrl" + "api/Incidents/DeleteComment?"
+                + "commentId=" + commentId
+                + "&incidentId=" + '@Model.Id'
+                + "&userId=" + '@ViewBag.userId'
+            axios.get(url)
+                .then((response) => {
+                    console.log("comment delted :", response);
+                    $("#commentBox-" + commentId).remove();
+                    //incidentUpdatedSignalR(incidentId);
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                    const data = "while delteing comment: " + err.message;
+                });
+         }
 
 
     </script>
