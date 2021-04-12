@@ -38,7 +38,7 @@
             </tr>
             <tr>
                 <td><h6 class="text-muted">Additional Details</h6></td>
-                <td><textarea class="w-100 txt" id="addtionalDetails" placeholder="" oninput="auto_grow(this)"></textarea></td>
+                <td><textarea class="w-100 txt" id="additionalDetails" placeholder="" oninput="auto_grow(this)"></textarea></td>
             </tr>
             <tr>
                 <td><h6 class="text-muted">Start Time</h6></td>
@@ -60,7 +60,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="text-center">
-                    <input type="button" class="btn bg-success text-white" value="Save" />
+                    <input type="button" onclick="saveIncident();" class="btn bg-success text-white" value="Save" />
                     <input type="button" class="btn bg-warning text-white" value="Cancel" />
                 </td>
             </tr>
@@ -71,6 +71,15 @@
 @section Scripts{
     <script src="~/datepicker/simplepicker.js"></script>
     <script>
+
+        let title;
+        let assignee;
+        let description;
+        let additionalDetails;
+        let startTime;
+        let dueDate;
+
+
         $(document).ready(function () {
             setAssigneeList("");
 
@@ -93,51 +102,51 @@
 
         function assigneeSelected(id) {
             $('#assigneeDdl').val(getUserNameById(id));
-            alert(id);
+            assignee = id;
         }
+         
+        function saveIncident() {
 
-    function validateForm() {
+            title = $("#title").val();
+            description = $("#description").val();
+            additionalDetails = $("#additionalDetails").val();
 
-        if (title === "" || description === "" || dueDateDateRef.current.value === "" || dueDateTimeRef.current.value === ""
-            || startTimeDateRef.current.value === "" || startTimeTimeRef.current.value === "")
-            return false;
-        return true;
-    }
+            if (title === "" || description === "" || !startTime || !dueDate) {
+                alert("Please complete required fields before saving.");
+                return;
+             }
 
-    function saveIncident() {
-        if (!validateForm()) {
-            alert("Please complete required fields before saving.")
-            return;
-        }
-
-        if (files) {
-            for (let i = 0; i < files.length; i++) {
-                formData.append(
-                    "Attachment" + i + 1,
-                    files[i],
-                    files[i].name
-                );
+            let formData = new FormData();
+            let files = $('#files')[0].files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append(
+                        "Attachment" + i + 1,
+                        files[i],
+                        files[i].name
+                    );
+                }
             }
-        }
-        formData.append("CreatedBy", '@ViewBag.userId');
-        formData.append("AssignedTo", assignee);
-        formData.append("Title", title);
-        formData.append("Description", description);
-        formData.append("AdditionalDeta", additionalDetails);
-        formData.append("StartTime", startTime);
-        formData.append("DueDate", dueDate);
-        formData.append("Status", "N");
+            formData.append("CreatedBy", '@ViewBag.userId');
+            formData.append("AssignedTo", assignee);
+            formData.append("Title", title);
+            formData.append("Description", description);
+            formData.append("AdditionalDeta", additionalDetails);
+            formData.append("StartTime", setDate(startTime));
+            formData.append("DueDate", setDate(dueDate));
+            formData.append("Status", "N");
 
-        axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
-        const url = "@ViewBag.baseUrl" + "api/Incidents/AddIncident";
-        axios.post(url, formData)
-            .then((response) => {
-                const data = true;
-            })
-            .catch((err) => {
-                const data = err.message;
-            });
-        }
+            axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
+            const url = "@ViewBag.baseUrl" + "api/Incidents/AddIncident";
+            axios.post(url, formData)
+                .then((response) => {
+                    const data = true;
+                    window.location.href = '@Url.Content("~/Incident/IncidentListing")';
+                })
+                .catch((err) => {
+                    const data = err.message;
+                });
+            }
 
         ////////////////////////////////////  Date Pickers /////////////////////////////////////////
         let datepicker = new SimplePicker({
@@ -156,14 +165,14 @@
             datepicker.open();
         });
 
-        datepicker.on('submit', (date, readableDate) => {
+        datepicker.on('submit', (date,readableDate) => {
             if (isStartDate) {
                 $("#startDate").val(readableDate);
-
+                startTime = date;
             }
             else {
                 $("#dueDate").val(readableDate);
-
+                dueDate = date;
             }
         });
 

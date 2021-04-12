@@ -61,6 +61,7 @@ namespace Web.Controllers
             var user = HttpContext.Session.Get<UserLogin>("UserLogin");
             ViewBag.userLogin = JsonConvert.SerializeObject(user);
             ViewBag.token = user.Token;
+            ViewBag.userId = user.user.Id;
             ViewBag.baseUrl = Configuration["ApiBaseUrl"];
 
             var allUsers = HttpContext.Session.Get<List<User>>("Users");
