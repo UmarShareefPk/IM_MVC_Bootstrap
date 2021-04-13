@@ -1,0 +1,105 @@
+﻿<link href="~/css/newIncident.css" rel="stylesheet" />
+<link href="~/datepicker/simplepicker.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="site-cl">Add New Incident</h3>
+    </div>
+</div>
+<br>
+<br>
+
+<div class="row section">
+    <div class="offset-md-2 col-md-8 col-sm-12 text-center">
+        <table class="table new-incident">
+            <tr>
+                <td><h6 class="text-muted text-nowrap">First Name</h6></td>
+                <td><input id="firstName" type="text" placeholder="" class="w-100 txt" /></td>
+            </tr>
+            
+            <tr>
+                <td><h6 class="text-muted text-nowrap">Last Name</h6></td>
+                <td><input id="lastName" type="text" placeholder="" class="w-100 txt" /></td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Email</h6></td>
+                <td><input id="email" type="text" placeholder="" class="w-100 txt" /></td>
+            </tr>
+            <tr>
+                <td><h6 class="text-muted">Phone</h6></td>
+                <td><input id="phone" type="text" placeholder="" class="w-100 txt" /></td>
+            </tr>
+          
+            <tr>
+                <td colspan="2">
+                    <div class="custom-file upload-container w-100 text-left">
+                        <button class="btn bg-primary text-white"><i class="fas fa-paperclip"></i></button>
+                        <input class="file" id="files" onchange="$('#filestxt').val($('#files')[0].files[0].name+ '')" type="file"  />
+                        <input type="text" id="filestxt" class="txt  text-muted" value="Click here to upload Files" readonly>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <input type="button" onclick="saveUser();" class="btn bg-success text-white" value="Save" />
+                    <input type="button" class="btn bg-warning text-white" value="Cancel" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/datepicker/simplepicker.js"></script>
+    <script>
+
+        let firstName;
+        let lastName;
+        let email;
+        let phone;
+
+        function saveUser() {
+
+            firstName = $("#firstName").val();
+            lastName = $("#lastName").val();
+            email = $("#email").val();
+            phone = $("#phone").val();
+
+            if (firstName === "" || lastName === "" || email === "" ) {
+                alert("Please complete required fields before saving.");
+                return;
+             }
+
+            let formData = new FormData();
+            let files = $('#files')[0].files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append(
+                        "Attachment" + i + 1,
+                        files[i],
+                        files[i].name
+                    );
+                }
+            }
+            formData.append("FirstName", firstName);
+            formData.append("LastName", lastName);
+            formData.append("Email", email);
+            formData.append("Phone", phone);
+
+            axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
+            const url = "@ViewBag.baseUrl" + "api/Users/AddUser";
+            axios.post(url, formData)
+                .then((response) => {
+                    const data = true;
+                    window.location.href = '@Url.Content("~/User/UserListing")';
+                })
+                .catch((err) => {
+                    const data = err.message;
+                    alert(data);
+                });
+            }
+
+
+    </script>
+}

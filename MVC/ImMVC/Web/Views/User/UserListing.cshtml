@@ -1,0 +1,164 @@
+﻿@{
+}
+<link href="~/css/imListing.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-sm-6">
+        <h3 class="site-cl">Users Listing</h3>
+    </div>
+    <div class="col-sm-6 text-right">
+        <a href='@Url.Content("~/User/AddUser")' class="btn text-white bg-success">Add User</a>
+    </div>
+</div>
+
+<div class="row search-bar">
+    <div class="col-sm-12">
+        <span class="text-muted"> Search : </span>
+        <input type="text" class="txt w-50 text-muted" id="searchText" placeholder="Type first name or last name" />
+    </div>
+</div>
+
+<!-- Listing-->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tbody id="usersListRows">
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4 ">
+                <div class="text-success records-info" id="info"></div>
+            </div>
+            <div class="col-sm-12 col-md-2 ">
+                <div style="margin-top:5px;">
+                    <span>Page Size :</span>
+                    <select onchange="return pageSizeChanged(this);" id="pageSizeDdl" class="browser-default  dropdown-custom">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end" id="pageContainer">
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        let axiosCancelToken;
+
+    $(document).ready(function () {      
+        
+
+        loadUsers(5,1,"");
+
+        $("#searchText").on("input", function (e) {
+            let searchTxt = $("#searchText").val();
+            axiosCancelToken();
+
+            let pageSize = parseInt($("#pageSizeDdl").val());
+            loadUsers(pageSize, 1, searchTxt);
+
+        });
+     });
+
+    function loadUsers(pageSize, pageNumber, search  ) {
+        axios.defaults.headers = { 'Authorization': 'Bearer @ViewBag.token' };
+        const url = "@ViewBag.baseUrl" +
+            "api/Users/GetUsersWithPage?PageSize=" + pageSize +
+            "&PageNumber=" + pageNumber + "&SortBy=q&SortDirection=q&Search=" + search + "";
+            axios({
+                method: 'GET',
+                url: url,
+                cancelToken: new axios.CancelToken(c => axiosCancelToken = c)
+            })
+            .then((response) => {
+                setUsers(response.data.Users);
+                setPages(parseInt(response.data.Total_Users), pageSize, pageNumber, search);
+                setRecordsInfo(response.data.Total_Users, pageSize, pageNumber);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    } // end of loadIncidents
+
+        function setUsers(allUsers) {
+            let users = "";
+            allUsers.forEach((user) => {
+                users += "<tr>";
+                users += "<td >" + user.FirstName + "</td>";
+                users += "<td >" + user.LastName + "</td>";
+                users += "<td >" + user.Email + "</td>"; 
+                users += "<td ><span title='" + moment(user.CreateDate).format("MMMM DD YYYY, h:mm:ss a") + "' >" + moment(user.CreateDate).fromNow() + "</span></td>";
+                users += "</tr>";
+            })
+
+            // render html
+            $("#usersListRows").html(users);
+        }
+
+        function setPages(totalRecords, pageSize, currentPage, search) {
+            let pagesHtml = "";
+            let noOfPages = Math.ceil(totalRecords / pageSize);
+            // No pages if no records
+            if (totalRecords == 0)
+                return;
+            // set previous button
+            if (currentPage === 1)
+                pagesHtml += "<li class='page-item'><span class='page-link'>Previous</span></li>";
+            else
+                pagesHtml += "<li class='page-item' onclick=\"loadUsers(" + pageSize + "," + (currentPage - 1) + ",'" + search + "');\"><a class='page-link' href='#'>Previous</a></li>";
+
+            // set number buttons
+            for (let i = 1; i <= noOfPages; i++) {
+                let isActive = i === currentPage ? "active" : "";
+                pagesHtml += "<li class='page-item " + isActive + "' onclick=\"loadUsers(" + pageSize + "," + i + ",'" + search + "');\"><a class='page-link' href='#'>" + i + "</a></li>";
+            }
+
+            // set next button
+            if (currentPage === noOfPages)
+                pagesHtml += "<li class='page-item'><span class='page-link'>Next</span></li>";
+            else
+                pagesHtml += "<li class='page-item' onclick=\"loadUsers(" + pageSize + "," + (currentPage + 1) + ",'" + search + "');\"><a class='page-link' href='#'>Next</a></li>";
+
+            // render html
+            $("#pageContainer").html(pagesHtml);
+        }
+
+        function pageSizeChanged(dropdown) {
+            loadUsers($(dropdown).val(), 1, $("#searchText").val());
+        }
+
+        function setRecordsInfo(total, pageSize, pageNumber) {
+            let end = pageSize * pageNumber;
+            let start = end - pageSize + 1;
+            if (end > total)
+                end = total;
+            let info = "Showin from " + start + " to " + end + " of " + total + " users";
+            $("#info").html(info);
+        }
+    </script>
+}
