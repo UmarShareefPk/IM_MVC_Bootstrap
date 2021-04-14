@@ -74,7 +74,7 @@
         let axiosCancelToken;
 
     $(document).ready(function () {
-        localStorage.setItem("userlogin", JSON.stringify(@Html.Raw(ViewBag.userLogin)));
+        localStorage.setItem("userLogin", JSON.stringify(@Html.Raw(ViewBag.userLogin)));
         localStorage.setItem("allUsers", JSON.stringify(@Html.Raw(ViewBag.Users)));
 
         loadIncidents(5,1,"");

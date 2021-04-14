@@ -49,6 +49,19 @@ namespace Web.Controllers
             return View();
         }
 
+        public PartialViewResult UserNotifications()
+        {
+            var user = HttpContext.Session.Get<UserLogin>("UserLogin");
+            ViewBag.userLogin = JsonConvert.SerializeObject(user);
+            ViewBag.token = user.Token;
+            ViewBag.baseUrl = Configuration["ApiBaseUrl"];
+
+            var allUsers = HttpContext.Session.Get<List<User>>("Users");
+            ViewBag.Users = JsonConvert.SerializeObject(allUsers);
+
+            return PartialView();
+        }
+
 
     }// end of class
 }

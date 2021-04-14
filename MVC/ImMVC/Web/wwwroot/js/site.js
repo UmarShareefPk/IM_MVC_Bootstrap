@@ -86,3 +86,40 @@ function setDate(datetime) {
         + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
         )   
 }
+
+
+function getAllNotifications() {
+    let user = JSON.parse(localStorage.getItem("userLogin"));
+    let token = user.Token;
+    let userId = user.user.Id;
+    
+    axios.defaults.headers = { 'Authorization': `Bearer ${ token + ""}` };
+    const url = apiBaseUrl + "api/Users/UserNotifications" + "?userId=" + userId;
+    return axios.get(url);
+        //.then((response) => {
+        //    const notifications = response.data;
+        //    console.log(notifications);
+        //})
+        //.catch((err) => {
+        //    console.log(err);
+        //});    
+}
+
+function setNotificationStatus  (id, isRead) {
+    let user = JSON.parse(localStorage.getItem("userLogin"));
+    let token = user.Token;
+
+    axios.defaults.headers = { 'Authorization': `Bearer ${token + ""}` };
+    const url = apiBaseUrl + "api/Users/UserNotifications" + "?notificationId=" + id + "&isRead=" + isRead;
+    axios.get(url)
+        .then((response) => {
+            const notification = {
+                id,
+                isRead
+            };
+           
+        })
+        .catch((err) => {
+            console.log(err);
+        });    
+}
