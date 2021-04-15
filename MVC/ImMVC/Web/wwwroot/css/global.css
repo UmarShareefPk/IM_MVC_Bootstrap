@@ -129,3 +129,6 @@ i.fas {
     width: 30vw;
     padding: 10px 30px;
 }
+.unread {
+    background: #F0F0F0;
+}

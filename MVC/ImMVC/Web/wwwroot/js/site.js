@@ -110,14 +110,14 @@ function setNotificationStatus  (id, isRead) {
     let token = user.Token;
 
     axios.defaults.headers = { 'Authorization': `Bearer ${token + ""}` };
-    const url = apiBaseUrl + "api/Users/UserNotifications" + "?notificationId=" + id + "&isRead=" + isRead;
+    const url = apiBaseUrl + "api/Users/UpdateIsRead" + "?notificationId=" + id + "&isRead=" + isRead;
     axios.get(url)
         .then((response) => {
             const notification = {
                 id,
                 isRead
             };
-           
+            console.log(notification);
         })
         .catch((err) => {
             console.log(err);
