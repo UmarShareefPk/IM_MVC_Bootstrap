@@ -337,26 +337,36 @@
         }
 
         function deleteAttachment(isComment, commentId, fileName, fileId) {
-            if (window.confirm("Are you sure you want to delete this attachment." + fileName)) {
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this file!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
 
-                  axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
-                const url = "@ViewBag.baseUrl" + "api/Incidents/DeleteFile?"
-                    + "type="  + (isComment ? "comment" : "incident")
-                    + "&commentId=" + (isComment ? commentId : "")
-                    + "&incidentId=" + "@Model.Id"
-                    + "&userId=" + "@ViewBag.userId"
-                    + "&fileId=" + fileId
-                    + "&filename=" + fileName
-                   // + "&contentType=" + file.ContentType
+                          axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+                        const url = "@ViewBag.baseUrl" + "api/Incidents/DeleteFile?"
+                            + "type="  + (isComment ? "comment" : "incident")
+                            + "&commentId=" + (isComment ? commentId : "")
+                            + "&incidentId=" + "@Model.Id"
+                            + "&userId=" + "@ViewBag.userId"
+                            + "&fileId=" + fileId
+                            + "&filename=" + fileName
+                           // + "&contentType=" + file.ContentType
 
-                axios.get(url)
-                    .then((response) => {
-                        $("#file-" + fileId).remove();
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
-                    });
-            }
+                            axios.get(url)
+                                .then((response) => {
+                                    $("#file-" + fileId).remove();
+                                })
+                                .catch((err) => {
+                                    console.log(err.message);
+                                });
+                    } else {
+                    }
+                });
         }
 ////////////////////////////////////  Date Pickers /////////////////////////////////////////
         let datepicker = new SimplePicker({
@@ -437,11 +447,11 @@
                 CommentText: $("#commentTxtEdit-" + commentId + " textarea").val(),
                 attachments: []
             }
-           
+
             axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
             const url = "@ViewBag.baseUrl" + "api/Incidents/UpdateComment";
             axios.post(url, comment)
-                .then((response) => {                   
+                .then((response) => {
                     $("#commentTxt-" + commentId).html(comment.CommentText);
                     $('#commentTxt-' + commentId).show();
                     $('#commentTxtEdit-' + commentId).hide();
@@ -454,24 +464,32 @@
         }
 
         function deleteComment(commentId) {
-            if (!window.confirm("Are you sure you want to delete this comment?")) {
-                return;
-            }
+           swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this comment!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
 
-            axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
-            const url = "@ViewBag.baseUrl" + "api/Incidents/DeleteComment?"
-                + "commentId=" + commentId
-                + "&incidentId=" + '@Model.Id'
-                + "&userId=" + '@ViewBag.userId'
-            axios.get(url)
-                .then((response) => {
-                    console.log("comment delted :", response);
-                    $("#commentBox-" + commentId).remove();
-                    sendUpdateToSignalR(comment.IncidentId);
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                    const data = "while delteing comment: " + err.message;
+                         axios.defaults.headers = { 'Authorization': `Bearer @ViewBag.token` };
+                         const url = "@ViewBag.baseUrl" + "api/Incidents/DeleteComment?"
+                        + "commentId=" + commentId
+                        + "&incidentId=" + '@Model.Id'
+                        + "&userId=" + '@ViewBag.userId'
+                        axios.get(url)
+                            .then((response) => {
+                                console.log("comment delted :", response);
+                                $("#commentBox-" + commentId).remove();
+                                sendUpdateToSignalR(comment.IncidentId);
+                            })
+                            .catch((err) => {
+                                console.log(err.message);
+                                const data = "while delteing comment: " + err.message;
+                            });
+                    }
                 });
          }
 
