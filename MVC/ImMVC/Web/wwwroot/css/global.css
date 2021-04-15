@@ -126,9 +126,13 @@ i.fas {
 .notification-list {
     max-height: 80vh;
     overflow-y: auto;
-    width: 30vw;
+    width: 35vw;
     padding: 10px 30px;
 }
 .unread {
     background: #F0F0F0;
+}
+
+.notification-list fa-bookmark {
+    cursor:pointer;
 }

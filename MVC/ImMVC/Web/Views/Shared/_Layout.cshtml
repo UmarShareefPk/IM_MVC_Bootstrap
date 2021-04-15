@@ -6,11 +6,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Web</title>
+    <title>Incident Manager</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/global.css">
-
-
 </head>
 <body>
     @*<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>*@
@@ -68,79 +66,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha512-oe8OpYjBaDWPt2VmSFR+qYOdnTjeV9QPLJUeqZyprDEQvQLJ9C5PCFclxwNuvb/GQgQngdCXzKSFltuHD3eCxA==" crossorigin="anonymous" />
     @await RenderSectionAsync("Scripts", required: false)
-    <script>
-        setToaster();
-       let unreadCount;
+<script>
+
+    setToaster();
+    let unreadCount;
 
     $(document).ready(function () {
-        setnotifications();
-     ////////////////////  SignalR  ///////////////////////////////////////////
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl(apiBaseUrl + "hubs/notifications")
-            .configureLogging(signalR.LogLevel.Information)
-            .build();
-
-        connection.start()
-            .then(result => {
-                console.log('Connected!');
-                let hubId = connection.connectionId;
-                updateHubId(hubId);
-
-                connection.on('UpdateNotifications', (incidentId) => {
-                    console.log("Update Received from Hub : " , incidentId);
-                    setnotifications();
-                    toastr.success('An incident just updated. Please check your notifications.', 'Updates');
-                });
-            })
-            .catch(e => console.log('Connection failed: ', e));
-
-    ///////////////////////  Notifications///////////////////////////////////////////
-
-
+        setnotifications();  // get and render all notifications - see site.js
+        signlrListener(); // see site.js
     });
 
-        function setnotifications() {
-            getAllNotifications().then(res => {
-                let notifications = res.data;
-                unreadCount = notifications.filter((notification) => !notification.IsRead).length;
-                $("#notificationCount").html(unreadCount + " new");
-                setNotificationsHtml(notifications);
-            });
-        }
-
-        function setNotificationsHtml(notifications) {
-
-        let html = "";
-        if (!notifications) {
-            $("#notificationCount").hide();
-            return;
-        }
-
-        html += "<table class='table'>";
-
-        notifications.forEach((notification) => {
-            let time = "<small class='text-nowrap' style='margin-left:10px;'><span title='" + moment(notification.CreateDate).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(notification.CreateDate).fromNow() + "</span > </small>";
-            let url = '@Url.Content("~/Incident/IncidentDetails/")' + notification.IncidentId;
-
-            html += "<tr class='" + (notification.IsRead ? "" : "unread") + "'>";
-
-            html += "<td colspan='3'>";
-            html += "<a class='text-primary' href='" + url + "'>" + notification.NotifyAbout + "</a>";
-            html += "</td>";
-
-            html += "<td colspan='1'>";
-            html += time;
-            html += "<i title='" + (notification.IsRead ? "Mark Unread" : "Mark Read") +"' class='" + (notification.IsRead ? "far" : "fas") + " fa-bookmark' onclick=\"setStatus(this, '"+ notification.Id+"');\"></i>"
-            html += "</td>";
-
-            html += "</tr>";
+    function setnotifications() {
+        getAllNotifications().then(res => {
+            let notifications = res.data;
+            unreadCount = notifications.filter((notification) => !notification.IsRead).length;
+            $("#notificationCount").html(unreadCount + " new");
+            setNotificationsHtml(notifications);
         });
-        html += "</table>";
-
-    $("#notifications").html(html);
     }
 
-        function setStatus(source, id) {
+    function setNotificationsHtml(notifications) {
+
+        let html = "";
+             if (!notifications) {
+                $("#notificationCount").hide();
+                return;
+            }
+
+            html += "<table class='table'>";
+
+            notifications.forEach((notification) => {
+                let time = "<small class='text-nowrap' style='margin-left:10px;'><span title='" + moment(notification.CreateDate).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(notification.CreateDate).fromNow() + "</span > </small>";
+                let url = '@Url.Content("~/Incident/IncidentDetails/")' + notification.IncidentId;
+
+                html += "<tr class='" + (notification.IsRead ? "" : "unread") + "'>";
+
+                html += "<td colspan='3'>";
+                html += "<a class='text-primary' href='" + url + "'>" + notification.NotifyAbout + "</a>";
+                html += "</td>";
+
+                html += "<td colspan='1'>";
+                html += time;               
+                html += "</td>";
+
+                html += "<td colspan='1'>";               
+                html += "<i title='" + (notification.IsRead ? "Mark Unread" : "Mark Read") + "' class='" + (notification.IsRead ? "far" : "fas") + " fa-bookmark text-right' onclick=\"setStatus(this, '" + notification.Id + "');\"></i>"
+                html += "</td>";
+
+                html += "</tr>";
+            });
+            html += "</table>";
+
+            $("#notifications").html(html);
+    }
+        //  Set status for notifications
+    function setStatus(source, id) {
         this.event.stopPropagation(); // don't close dropdown
 
         if ($(source).hasClass("far")) { // is read
@@ -157,8 +137,8 @@
         }
 
         $("#notificationCount").html(unreadCount + " new");
-      }
+    }
 
-    </script>
+</script>
 </body>
 </html>

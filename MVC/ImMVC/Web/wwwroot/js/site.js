@@ -151,7 +151,30 @@ function sendUpdateToSignalR(incidentId) {
         .catch(e => console.log('Connection failed: ', e));
 }
 
-function setToaster() {
+function signlrListener() {
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl(apiBaseUrl + "hubs/notifications")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.start()
+        .then(result => {
+            console.log('Connected!');
+            let hubId = connection.connectionId;
+            updateHubId(hubId);
+
+            connection.on('UpdateNotifications', (incidentId) => {
+                console.log("Update Received from Hub : ", incidentId);
+                setnotifications();
+                toastr.success('An incident just updated. Please check your notifications.', 'Updates');
+            });
+        })
+        .catch(e => console.log('Connection failed: ', e)); 
+}
+
+
+function setToaster() { // UI alerts
     toastr.options = {
         "closeButton": true,
         "debug": false,
