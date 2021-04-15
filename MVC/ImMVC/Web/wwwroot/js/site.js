@@ -131,20 +131,42 @@ function updateHubId(hubId) {
 }
 
 function sendUpdateToSignalR(incidentId) {
+    let user = JSON.parse(localStorage.getItem("userLogin"));   
+    let userId = user.user.Id;
 
     let connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:44310/hubs/notifications")
+        .withUrl(apiBaseUrl + "hubs/notifications")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
     connection.start()
         .then(result => {
             if (connection.connectionStarted) {
-                connection.send("SendIncidentUpdate", incidentId);
+                connection.send("SendIncidentUpdate", incidentId, userId);
 
             } else {
                 alert("No connection to server yet.");
             }
         })
         .catch(e => console.log('Connection failed: ', e));
+}
+
+function setToaster() {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-full-width",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
 }

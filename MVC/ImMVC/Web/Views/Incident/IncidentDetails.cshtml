@@ -310,7 +310,7 @@
             const url = "@ViewBag.baseUrl" + "api/Incidents/UpdateIncident";
             axios.post(url, parameters)
                 .then((response) => {
-                   // incidentUpdatedSignalR(parameters.IncidentId);
+                    sendUpdateToSignalR(parameters.IncidentId);
                 })
                 .catch((err) => {
                     console.log(err.message);
@@ -419,11 +419,7 @@
                 axios.post(url, formData)
                     .then((response) => {
                         const comment = response.data;
-                        //console.log("Comment", comment);
-                        //$('#commentFiles').val(null);
-                        //$('#commentFiles').replaceWith($('#commentFiles').clone(true));
-                        //$("#comment").val("");
-                        //$("#filestxt").val("Upload Files");
+                        sendUpdateToSignalR(comment.IncidentId);
                         window.location.reload(true);
                     })
                     .catch((err) => {
@@ -449,7 +445,7 @@
                     $("#commentTxt-" + commentId).html(comment.CommentText);
                     $('#commentTxt-' + commentId).show();
                     $('#commentTxtEdit-' + commentId).hide();
-                  // incidentUpdatedSignalR(comment.IncidentId);
+                    sendUpdateToSignalR(comment.IncidentId);
                 })
                 .catch((err) => {
                     console.log(err.message);
@@ -471,7 +467,7 @@
                 .then((response) => {
                     console.log("comment delted :", response);
                     $("#commentBox-" + commentId).remove();
-                    //incidentUpdatedSignalR(incidentId);
+                    sendUpdateToSignalR(comment.IncidentId);
                 })
                 .catch((err) => {
                     console.log(err.message);

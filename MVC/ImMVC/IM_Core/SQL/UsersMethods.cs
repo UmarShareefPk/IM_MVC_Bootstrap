@@ -197,7 +197,7 @@ namespace IM.SQL
             };
         }
 
-        public static List<string> GetHubIds(string incidentId)
+        public static List<string> GetHubIds(string incidentId, string userId)
         {
             var dt = new DataTable();
             var parameters = new SortedList<string, object>()
@@ -209,6 +209,7 @@ namespace IM.SQL
 
 
             var hubIds = (from rw in ds.Tables[0].AsEnumerable()
+                          where rw["userId"].ToString() != userId
                                  select rw["HubId"].ToString()).ToList();
 
             return hubIds;
