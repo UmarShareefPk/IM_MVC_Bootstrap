@@ -95,14 +95,7 @@ function getAllNotifications() {
     
     axios.defaults.headers = { 'Authorization': `Bearer ${ token + ""}` };
     const url = apiBaseUrl + "api/Users/UserNotifications" + "?userId=" + userId;
-    return axios.get(url);
-        //.then((response) => {
-        //    const notifications = response.data;
-        //    console.log(notifications);
-        //})
-        //.catch((err) => {
-        //    console.log(err);
-        //});    
+    return axios.get(url);       
 }
 
 function setNotificationStatus  (id, isRead) {
@@ -112,14 +105,46 @@ function setNotificationStatus  (id, isRead) {
     axios.defaults.headers = { 'Authorization': `Bearer ${token + ""}` };
     const url = apiBaseUrl + "api/Users/UpdateIsRead" + "?notificationId=" + id + "&isRead=" + isRead;
     axios.get(url)
-        .then((response) => {
-            const notification = {
-                id,
-                isRead
-            };
-            console.log(notification);
+        .then((response) => {           
         })
         .catch((err) => {
             console.log(err);
         });    
+}
+
+function updateHubId(hubId) {
+    let user = JSON.parse(localStorage.getItem("userLogin"));
+    let token = user.Token;
+    let userId = user.user.Id;
+
+    axios.defaults.headers = { 'Authorization': `Bearer ${token + ""}` };
+    const url = apiBaseUrl + "api/Users/UpdateHubId";
+    axios.post(url, {
+        HubId: hubId,
+        UserId: userId
+    }).then((response) => {  
+        console.log("HubId updated");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+function sendUpdateToSignalR(incidentId) {
+
+    let connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:44310/hubs/notifications")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.start()
+        .then(result => {
+            if (connection.connectionStarted) {
+                connection.send("SendIncidentUpdate", incidentId);
+
+            } else {
+                alert("No connection to server yet.");
+            }
+        })
+        .catch(e => console.log('Connection failed: ', e));
 }

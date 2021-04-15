@@ -37,8 +37,7 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><i class="fas fa-bell"></i></a>
                         <div class="dropdown-menu dropdown-menu-right justify-content-center">
                             <div id="notifications" class="notification-list scrollbar">
-                                <p>1</p>
-                                <p>2</p>
+
                             </div>
                         </div>
                     </div>
@@ -64,29 +63,57 @@
     <script src="https://kit.fontawesome.com/9c6b3ade7b.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.14/signalr.min.js" integrity="sha512-z1IHuM5a2zYLnhWvPGXxTgfLQVqrFpWSuBsYbWpDtus0FLa0ZCbCuMylKDhVx+L3xRjUfP0Mnzgt1ROpExTDrg==" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
-<script>
-    let unreadCount;
+    <script>
+
+       let unreadCount;
 
     $(document).ready(function () {
+        setnotifications();
+     ////////////////////  SignalR  ///////////////////////////////////////////
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:44310/hubs/notifications")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
 
-        getAllNotifications().then(res => {
-            console.log(res.data);
-            let notifications = res.data;
-            unreadCount = notifications.filter((notification) => !notification.IsRead).length;
-            $("#notificationCount").html(unreadCount + " new");
-            setNotifications(notifications);
-        });
+        connection.start()
+            .then(result => {
+                console.log('Connected!');
+                let hubId = connection.connectionId;
+                updateHubId(hubId);
+
+                connection.on('UpdateNotifications', (incidentId) => {
+                    console.log("Update Received from Hub : " , incidentId);
+                    setnotifications();
+                });
+
+            })
+            .catch(e => console.log('Connection failed: ', e));
+
+    ///////////////////////  Notifications///////////////////////////////////////////
+      
+
     });
 
-    function setNotifications(notifications) {
+        function setnotifications() {
+            getAllNotifications().then(res => {
+                let notifications = res.data;
+                unreadCount = notifications.filter((notification) => !notification.IsRead).length;
+                $("#notificationCount").html(unreadCount + " new");
+                setNotificationsHtml(notifications);
+            });
+        }
+
+        function setNotificationsHtml(notifications) {
+
         let html = "";
         if (!notifications) {
             $("#notificationCount").hide();
             return;
         }
 
-        html += "<table class='table'>";  
+        html += "<table class='table'>";
 
         notifications.forEach((notification) => {
             let time = "<small class='text-nowrap' style='margin-left:10px;'><span title='" + moment(notification.CreateDate).format("MMMM DD YYYY, h:mm:ss a") + "'>" + moment(notification.CreateDate).fromNow() + "</span > </small>";
@@ -103,21 +130,21 @@
             html += "<i title='" + (notification.IsRead ? "Mark Unread" : "Mark Read") +"' class='" + (notification.IsRead ? "far" : "fas") + " fa-bookmark' onclick=\"setStatus(this, '"+ notification.Id+"');\"></i>"
             html += "</td>";
 
-            html += "</tr>";  
+            html += "</tr>";
         });
-        html += "</table>";  
+        html += "</table>";
 
     $("#notifications").html(html);
     }
 
-    function setStatus(source, id) {
-        this.event.stopPropagation(); // don't close dropdown       
+        function setStatus(source, id) {
+        this.event.stopPropagation(); // don't close dropdown
 
         if ($(source).hasClass("far")) { // is read
             $(source).removeClass("far").addClass("fas");
             $(source).closest('tr').toggleClass("unread");
             setNotificationStatus(id, false);
-            ++unreadCount;            
+            ++unreadCount;
         }
         else if ($(source).hasClass("fas")) { // is unread
             $(source).removeClass("fas").addClass("far");
@@ -127,7 +154,8 @@
         }
 
         $("#notificationCount").html(unreadCount + " new");
-    }
-</script>
+      }
+
+    </script>
 </body>
 </html>
