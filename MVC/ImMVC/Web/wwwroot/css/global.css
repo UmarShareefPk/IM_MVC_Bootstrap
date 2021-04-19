@@ -25,50 +25,7 @@
 
 
   
- /* extra Small devices (landscape phones, 576px and up) */
-@media (min-width: 279px) {  
-    .main-container {
-        min-height: 100vh;
-        background-color: white;
-    }  
- }
-
-  /*  Small devices (landscape phones, 576px and up) */
-@media (min-width: 400px) {    
-    .main-container {       
-        min-height: 100vh;
-    }   
-}
-
-
-/* // Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) { 
-    .main-container {        
-        min-height: 100vh;
-    }  
- }
-
-/* // Large devices (desktops, 992px and up) */
-@media (min-width: 992px) { 
-    .main-container {      
-        min-height: 100vh;
-    }  
- }
-
-/* // Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) { 
-    .main-container {     
-        min-height: 100vh;
-        background-color: white;
-        margin-top: 5vh;
-    }  
-    .navbar{
-        padding: 10px 200px !important;
-        width: auto;
-        min-height: 12vh;
-    }
-   
-}
+ 
 
 .nav-item i{
     font-size: 23px;
@@ -123,16 +80,83 @@ i.fas {
     cursor: pointer;
 }
 
-.notification-list {
-    max-height: 80vh;
-    overflow-y: auto;
-    width: 35vw;
-    padding: 10px 30px;
-}
+
 .unread {
     background: #F0F0F0;
 }
 
 .notification-list fa-bookmark {
     cursor:pointer;
+}
+
+
+/* extra Small devices (landscape phones, 576px and up) */
+@media (min-width: 280px) {
+    .main-container {
+        min-height: 100vh;
+        background-color: white;
+    }
+
+    notification-list {
+        max-height: 80vh;
+        overflow-y: auto;
+       
+        padding: 10px 30px;
+    }
+}
+
+/*  Small devices (landscape phones, 576px and up) */
+@media (min-width: 400px) {
+    .main-container {
+        min-height: 100vh;
+    }
+
+    .notification-list {
+        max-height: 80vh;
+        overflow-y: auto;
+       
+        padding: 10px 30px;
+    }
+}
+
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .main-container {
+        min-height: 100vh;
+    }
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .main-container {
+        min-height: 100vh;
+    }
+    .notification-list {
+        max-height: 80vh;
+        overflow-y: auto;
+        width: 35vw;
+        padding: 10px 30px;
+    }
+}
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .main-container {
+        min-height: 100vh;
+        background-color: white;
+        margin-top: 5vh;
+    }
+
+    .navbar {
+        padding: 10px 200px !important;
+        width: auto;
+        min-height: 12vh;
+    }
+    .notification-list {
+        max-height: 80vh;
+        overflow-y: auto;
+        width: 35vw;
+        padding: 10px 30px;
+    }
 }
